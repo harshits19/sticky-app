@@ -1,6 +1,9 @@
 import type { Metadata } from "next"
+import { ClerkProvider } from "@clerk/nextjs"
 import { Inter } from "next/font/google"
-import "./globals.css"
+import { dark } from "@clerk/themes"
+import "@/app/globals.css"
+import { EdgeStoreProvider } from "@/lib/edgestore"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -9,11 +12,21 @@ export const metadata: Metadata = {
   description: "A versatile socializing app",
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <body className={inter.className}>{children}</body>
+      <ClerkProvider
+        appearance={
+          {
+            /*  baseTheme: dark, */
+          }
+        }>
+        <body className={inter.className}>
+          <EdgeStoreProvider>{children}</EdgeStoreProvider>
+        </body>
+      </ClerkProvider>
     </html>
   )
 }
+export default RootLayout
