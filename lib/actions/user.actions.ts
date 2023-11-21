@@ -2,6 +2,7 @@
 import { connectToDB } from "@/lib/mongoose"
 import User from "@/lib/models/user.model"
 import { revalidatePath } from "next/cache"
+
 interface userProps {
   userId: string
   path: string
@@ -42,6 +43,14 @@ export const updateUser = async ({
       { upsert: true },
     )
     if (path === "/profile/edit") revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`${error.message}`)
+  }
+}
+export const getUser = async (userId: string) => {
+  try {
+    connectToDB()
+    return await User.findOne({ id: userId })
   } catch (error: any) {
     throw new Error(`${error.message}`)
   }

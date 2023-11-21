@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Inter } from "next/font/google"
+import { Toaster, toast } from "sonner"
 import { dark } from "@clerk/themes"
 import "@/app/globals.css"
 import { EdgeStoreProvider } from "@/lib/edgestore"
@@ -23,7 +24,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           }
         }>
         <body className={inter.className}>
-          <EdgeStoreProvider>{children}</EdgeStoreProvider>
+          <EdgeStoreProvider>
+            <Toaster />
+            {children}
+          </EdgeStoreProvider>
         </body>
       </ClerkProvider>
     </html>
