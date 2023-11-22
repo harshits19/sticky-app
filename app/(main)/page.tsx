@@ -1,14 +1,24 @@
-import { getUser } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
-import { redirect } from "next/navigation"
+import PostCard from "@/components/cards/PostCard"
+import { getAllPosts } from "@/lib/actions/thread.actions"
+import { PostProps } from "@/types"
 
 const MainLayout = async () => {
-  const user = await currentUser()
-  if (!user) return null
-  const userInfo = await getUser(user.id)
-  if (!userInfo?.onboarded) redirect("/onboarding")
-
-  // updateUser({ userId: "23213", name: "hasthi", path: "/abc" })
-  return <div>Homepage</div>
+  const { posts } = await getAllPosts()
+  return (
+    <section>
+      {posts?.map((post) => {
+        return (
+          <PostCard
+            key={post.authorId}
+            content={post.text}
+            created={post.created}
+            updated={post.updated}
+            images={post.postImages}
+            author={post.authorId}
+          />
+        )
+      })}
+    </section>
+  )
 }
 export default MainLayout

@@ -4,7 +4,7 @@ import Link from "next/link"
 type Props = {}
 const Navbar = (props: Props) => {
   return (
-    <nav className="topbar">
+    <nav className="sticky top-0 h-16 w-full bg-gray-400">
       <Link href="/" className="flex items-center gap-4">
         <Image src="/logo144.png" alt="logo" height={28} width={28} />
         <p className="text-heading3-bold text-light-1 max-xs:hidden">Sticky</p>

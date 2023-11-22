@@ -12,7 +12,7 @@ interface userProps {
   bio?: string
   link?: string
   onboarded?: string
-  userLabel?: boolean
+  userLabel?: string
   visibility?: boolean
 }
 export const updateUser = async ({
@@ -44,7 +44,7 @@ export const updateUser = async ({
     )
     if (path === "/profile/edit") revalidatePath(path)
   } catch (error: any) {
-    throw new Error(`${error.message}`)
+    throw new Error(`${error}`)
   }
 }
 export const getUser = async (userId: string) => {
@@ -52,6 +52,6 @@ export const getUser = async (userId: string) => {
     connectToDB()
     return await User.findOne({ id: userId })
   } catch (error: any) {
-    throw new Error(`${error.message}`)
+    throw new Error(`${error}`)
   }
 }

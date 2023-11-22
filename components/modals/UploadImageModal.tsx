@@ -7,8 +7,14 @@ import { useProfilePhoto } from "@/hooks/useProfilePhoto"
 import { useEdgeStore } from "@/lib/edgestore"
 import { updateUser } from "@/lib/actions/user.actions"
 
-const ProfilePhotoModal = ({ userId }: { userId: string }) => {
-  const { isOpen, onClose, url } = useProfilePhoto()
+const UploadImageModal = ({
+  userId,
+  profilePic,
+}: {
+  userId?: string
+  profilePic?: boolean
+}) => {
+  const { isOpen, onClose, url, addImg } = useProfilePhoto()
   const [file, setFile] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { edgestore } = useEdgeStore()
@@ -33,11 +39,13 @@ const ProfilePhotoModal = ({ userId }: { userId: string }) => {
           replaceTargetUrl: url,
         },
       })
-      await updateUser({
-        userId: userId,
-        path: "/profile/edit",
-        profilePhoto: res.url,
-      })
+      addImg(res.url)
+      userId && profilePic &&
+        (await updateUser({
+          userId: userId,
+          path: "/profile/edit",
+          profilePhoto: res.url,
+        }))
     } catch (err) {
       toast.error("Error uploading image. The file size may be too large.")
     }
@@ -47,7 +55,7 @@ const ProfilePhotoModal = ({ userId }: { userId: string }) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <h2 className="text-center text-lg font-semibold">Profile Image</h2>
+          <h2 className="text-center text-lg font-semibold">Upload Image</h2>
         </DialogHeader>
         <SingleImageDropzone
           className="w-full outline-none"
@@ -59,4 +67,4 @@ const ProfilePhotoModal = ({ userId }: { userId: string }) => {
     </Dialog>
   )
 }
-export default ProfilePhotoModal
+export default UploadImageModal

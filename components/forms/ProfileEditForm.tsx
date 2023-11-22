@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import UploadImageModal from "../modals/UploadImageModal"
 import {
   Form,
   FormControl,
@@ -13,13 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { UserValidation } from "@/lib/validations/user"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUser } from "@/lib/actions/user.actions"
 import { useProfilePhoto } from "@/hooks/useProfilePhoto"
 import { Plus } from "lucide-react"
-import { toast } from "sonner"
-import ProfilePhotoModal from "../modals/ProfilePhotoModal"
 
 type FormValues = {
   id: string
@@ -35,9 +36,11 @@ type FormValues = {
 const ProfileEditForm = ({
   user,
   btnTitle,
+  editForm,
 }: {
   user: FormValues
   btnTitle: string
+  editForm?: boolean
 }) => {
   const { onOpen } = useProfilePhoto()
   const pathname = usePathname()
@@ -50,32 +53,38 @@ const ProfileEditForm = ({
       username: user.username,
       profilePhoto: user.profilePhoto,
       bio: user.bio,
+      link: user.link,
+      userLabel: user.userLabel,
+      visibility: user.visibility,
     },
   })
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
-    const promise = updateUser({
-      userId: user.id,
-      path: pathname,
-      name: values?.name,
-      username: values?.username,
-      profilePhoto: user.profilePhoto,
-      bio: values?.bio,
-    })
-    toast.promise(promise, {
-      loading: `${
-        pathname === "/onboarding" ? "Creating" : "Updating"
-      } Profile...`,
-      success: `Profile ${
-        pathname === "/onboarding" ? "created!" : "updated!"
-      }`,
-      error: `Failed to ${
-        pathname === "/onboarding" ? "create" : "update"
-      } profile.`,
-    })
-    if (pathname === "/profile/edit") {
-      router.back()
-    } else {
-      router.push("/")
+    try {
+      await updateUser({
+        userId: user.id,
+        path: pathname,
+        name: values.name,
+        username: values.username,
+        profilePhoto: user.profilePhoto,
+        bio: values.bio,
+        link: values.link,
+        userLabel: values.userLabel,
+        visibility: values.visibility,
+      })
+      toast.success(
+        `Profile ${pathname === "/onboarding" ? "created!" : "updated!"}`,
+      )
+      if (pathname === "/profile/edit") {
+        router.back()
+      } else {
+        router.push("/")
+      }
+    } catch (err: any) {
+      toast.error(
+        `Failed to ${
+          pathname === "/onboarding" ? "create" : "update"
+        } profile. \n Error: ${err.message}`,
+      )
     }
   }
   return (
@@ -134,13 +143,74 @@ const ProfileEditForm = ({
             </FormItem>
           )}
         />
+        {editForm && (
+          <FormField
+            control={form.control}
+            name="link"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Link</FormLabel>
+                <FormControl>
+                  <Input placeholder="link" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {editForm && (
+          <FormField
+            control={form.control}
+            name="userLabel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <Input placeholder="category" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {editForm && (
+          <FormField
+            control={form.control}
+            name="visibility"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Profile Visibility</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex space-x-1">
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value={true} />
+                      </FormControl>
+                      <FormLabel className="font-normal">Public</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value={false} />
+                      </FormControl>
+                      <FormLabel className="font-normal">Private</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <div>
           <Button type="submit" className="mt-2 w-full">
             {btnTitle}
           </Button>
         </div>
       </form>
-      <ProfilePhotoModal userId={user.id} />
+      <UploadImageModal userId={user.id} profilePic />
     </Form>
   )
 }
