@@ -1,6 +1,8 @@
 import Image from "next/image"
+import Link from "next/link"
 interface PostProps {
   content: string
+  id: string
   created: Date
   updated: Date
   images: string[]
@@ -10,20 +12,33 @@ interface PostProps {
     _id: string
     profilePhoto: string
   }
+  parentId?: string | null
 }
-const PostCard = ({ content, created, updated, images, author }: PostProps) => {
+const PostCard = ({
+  content,
+  id,
+  created,
+  updated,
+  images,
+  author,
+  parentId,
+}: PostProps) => {
   return (
     <article className="">
-      <p>{author.name}</p>
+      <Link href={`/profile/${author._id.toString()}`}>
+        <p>{author.name}</p>
+      </Link>
       <p>{author.username}</p>
       <Image
-        src={author.profilePhoto}
+        src={author?.profilePhoto}
         alt="author-pic"
         height={48}
         width={48}
-        className="rounded-full"
+        className="h-12 w-12 rounded-full"
       />
-      <div>{content}</div>
+      <Link href={`/thread/${id}`}>
+        <div>{content}</div>
+      </Link>
       <p>{created?.toLocaleString()}</p>
       <div className="flex space-x-2">
         {images?.length > 0 &&

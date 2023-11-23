@@ -55,3 +55,11 @@ export const getUser = async (userId: string) => {
     throw new Error(`${error}`)
   }
 }
+export const getUserByAuthorId = async (authorId: string) => {
+  try {
+    connectToDB()
+    return await User.findOne({ _id: authorId })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}

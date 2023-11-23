@@ -9,6 +9,7 @@ interface threadProps {
   content: string
   postImg?: string[]
   path: string
+  parentId?: string
 }
 export const createThread = async ({
   authorId,
@@ -49,7 +50,7 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
         populate: {
           path: "authorId",
           model: User,
-          select: "_id name parentId profilePhoto",
+          select: "_id name username parentId profilePhoto",
         },
       })
 
@@ -65,10 +66,84 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
     throw new Error(`${error}`)
   }
 }
-export const getPostsByAuthorId = async (authorId: string) => {
+export const getPostsByAuthorId = async (authorId: any) => {
   try {
     connectToDB()
-    return await Thread.findById({ authorId })
+    return await Thread.find({
+      authorId,
+      parentId: { $in: [null, undefined] },
+    }).populate({
+      path: "children",
+      model: Thread,
+      populate: [
+        {
+          path: "children",
+          model: Thread,
+          populate: {
+            path: "authorId",
+            model: User,
+            select: "_id id name username parentId profilePhoto",
+          },
+        },
+      ],
+    })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+export const getThreadById = async (threadId: string) => {
+  try {
+    connectToDB()
+    return await Thread.findById({ _id: threadId })
+      .populate({
+        path: "authorId",
+        model: User,
+        select: "_id name username profilePhoto",
+      })
+      .populate({
+        path: "children",
+        populate: [
+          {
+            path: "authorId",
+            model: User,
+            select: "_id id name username parentId profilePhoto",
+          },
+          {
+            path: "children",
+            model: Thread,
+            populate: {
+              path: "authorId",
+              model: User,
+              select: "_id id name username parentId profilePhoto",
+            },
+          },
+        ],
+      })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+export const createComment = async ({
+  authorId,
+  parentId,
+  content,
+  postImg,
+  path,
+}: threadProps): Promise<void> => {
+  try {
+    connectToDB()
+    const createdComment = await Thread.create({
+      authorId,
+      parentId,
+      text: content,
+      postImages: postImg,
+    })
+
+    await Thread.findByIdAndUpdate(parentId, {
+      $push: { children: createdComment._id },
+    })
+    revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
   }

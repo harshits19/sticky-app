@@ -8,6 +8,7 @@ interface ProfilePhotoProps {
   onReplace: (url: string) => void
   imageStore: string[]
   addImg: (url: string) => void
+  clearImgStore: () => void
 }
 
 export const useProfilePhoto = create<ProfilePhotoProps>((set) => ({
@@ -18,4 +19,5 @@ export const useProfilePhoto = create<ProfilePhotoProps>((set) => ({
   onReplace: (url: string) => set({ isOpen: true, url }),
   addImg: (url: string) =>
     set((state) => ({ imageStore: [...state.imageStore, url] })),
+  clearImgStore: () => set({ imageStore: [], url: undefined }),
 }))

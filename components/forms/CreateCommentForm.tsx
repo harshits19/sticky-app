@@ -1,7 +1,6 @@
 "use client"
 import * as z from "zod"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import UploadImageModal from "../modals/UploadImageModal"
 import { Button } from "@/components/ui/button"
@@ -15,37 +14,42 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useProfilePhoto } from "@/hooks/useProfilePhoto"
 import { Textarea } from "../ui/textarea"
-import { createThread } from "@/lib/actions/thread.actions"
+import { createComment } from "@/lib/actions/thread.actions"
 import { ThreadValidation } from "@/lib/validations/thread"
 import { ImageIcon } from "lucide-react"
 
-type FormValues = {}
-
-const CreatePostForm = ({ authorId }: { authorId: string }) => {
-  const { onOpen, imageStore, clearImgStore } = useProfilePhoto()
-  const router = useRouter()
+const CreateCommentForm = ({
+  parentId,
+  authorId,
+}: {
+  parentId: string
+  authorId: string
+}) => {
+  const { onOpen, imageStore,clearImgStore } = useProfilePhoto()
 
   const form = useForm<z.infer<typeof ThreadValidation>>({
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
       authorId: "",
+      parentId: "",
       content: "",
       postImg: [],
     },
   })
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     try {
-      await createThread({
+      await createComment({
         authorId,
+        parentId,
         content: values.content,
         postImg: imageStore,
-        path: "/create-post",
+        path: `/thread/${parentId}`,
       })
+      form.reset()
+      clearImgStore()
     } catch (err) {
       console.log(err)
     }
-    clearImgStore()
-    router.push("/")
   }
   return (
     <Form {...form}>
@@ -92,4 +96,4 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
     </Form>
   )
 }
-export default CreatePostForm
+export default CreateCommentForm
