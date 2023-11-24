@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { toast } from "sonner"
 import UploadImageModal from "../modals/UploadImageModal"
 import {
@@ -15,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { UserValidation } from "@/lib/validations/user"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUser } from "@/lib/actions/user.actions"
@@ -42,7 +43,7 @@ const ProfileEditForm = ({
   btnTitle: string
   editForm?: boolean
 }) => {
-  const { onOpen } = useProfilePhoto()
+  const { onOpen, clearImgStore } = useProfilePhoto()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -74,6 +75,7 @@ const ProfileEditForm = ({
       toast.success(
         `Profile ${pathname === "/onboarding" ? "created!" : "updated!"}`,
       )
+      clearImgStore()
       if (pathname === "/profile/edit") {
         router.back()
       } else {
@@ -89,16 +91,22 @@ const ProfileEditForm = ({
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <div className="flex w-full max-w-sm items-end space-x-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-2 sm:max-w-lg">
+        <div className="flex w-full items-end gap-x-2 sm:gap-x-4">
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex-1">
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="username" {...field} />
+                  <Input
+                    placeholder="username"
+                    className="no-focus"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -107,13 +115,13 @@ const ProfileEditForm = ({
           <div className="relative cursor-pointer" onClick={onOpen}>
             <Image
               src={user.profilePhoto}
-              height={40}
-              width={40}
+              height={56}
+              width={56}
               alt="profile-photo"
-              className="h-10 w-10 rounded-full object-cover"
+              className="h-14 w-14 rounded-full object-cover"
             />
-            <div className="absolute bottom-0 right-0 rounded-full bg-black">
-              <Plus className="h-4 w-4 text-white" />
+            <div className="absolute bottom-0 right-0 rounded-full bg-foreground">
+              <Plus className="h-4 w-4 text-secondary" />
             </div>
           </div>
         </div>
@@ -124,7 +132,7 @@ const ProfileEditForm = ({
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="name" {...field} />
+                <Input placeholder="name" className="no-focus" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,7 +145,12 @@ const ProfileEditForm = ({
             <FormItem>
               <FormLabel>Bio</FormLabel>
               <FormControl>
-                <Input placeholder="bio" {...field} />
+                <Textarea
+                  placeholder="bio"
+                  className="no-focus resize-none"
+                  rows={2}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -151,7 +164,7 @@ const ProfileEditForm = ({
               <FormItem>
                 <FormLabel>Link</FormLabel>
                 <FormControl>
-                  <Input placeholder="link" {...field} />
+                  <Input placeholder="link" className="no-focus" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -166,7 +179,11 @@ const ProfileEditForm = ({
               <FormItem>
                 <FormLabel>Category</FormLabel>
                 <FormControl>
-                  <Input placeholder="category" {...field} />
+                  <Input
+                    placeholder="category"
+                    className="no-focus"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

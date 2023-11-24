@@ -1,7 +1,7 @@
 type Props = {}
 const RightSidebar = (props: Props) => {
   return (
-    <main className="w-96 h-full bg-gray-200">RightSidebar</main>
+    <main className="hidden lg:flex w-full max-w-xs h-full">RightSidebar</main>
   )
 }
 export default RightSidebar

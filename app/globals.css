@@ -47,7 +47,7 @@ body {
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 6.27%;
     --foreground: 0 0% 98%;
 
     --card: 0 0% 3.9%;
@@ -84,4 +84,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+.no-focus {
+  @apply focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 my-0 !important;
 }

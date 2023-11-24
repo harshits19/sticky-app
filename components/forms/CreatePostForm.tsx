@@ -19,8 +19,6 @@ import { createThread } from "@/lib/actions/thread.actions"
 import { ThreadValidation } from "@/lib/validations/thread"
 import { ImageIcon } from "lucide-react"
 
-type FormValues = {}
-
 const CreatePostForm = ({ authorId }: { authorId: string }) => {
   const { onOpen, imageStore, clearImgStore } = useProfilePhoto()
   const router = useRouter()
@@ -45,11 +43,12 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
       console.log(err)
     }
     clearImgStore()
+    form.reset()
     router.push("/")
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
         <FormField
           control={form.control}
           name="content"
@@ -57,8 +56,8 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
             <FormItem>
               <FormControl>
                 <Textarea
-                  placeholder="Create"
-                  className="resize-none"
+                  placeholder="Write a post..."
+                  className="no-focus h-16 resize-none border-none"
                   {...field}
                 />
               </FormControl>
@@ -66,26 +65,28 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
             </FormItem>
           )}
         />
-        <div>
-          <div onClick={onOpen}>
-            <ImageIcon className="m-2 h-6 w-6 rounded-sm bg-muted-foreground/10" />
+        <div className="flex items-center justify-between border-t border-muted px-4 py-2">
+          <div
+            onClick={onOpen}
+            className="cursor-pointer rounded-full p-1 hover:bg-muted">
+            <ImageIcon className="h-7 w-7 p-1" />
           </div>
-          <div className="flex w-full space-x-2">
-            {imageStore?.length > 0 &&
-              imageStore?.map((imgUrl) => (
-                <div className="relative h-64 w-full" key={imgUrl}>
-                  <Image
-                    src={imgUrl}
-                    alt="post-image"
-                    fill
-                    sizes="(max-width: 1200px) 50%, 33%"
-                  />
-                </div>
-              ))}
-          </div>
-          <Button type="submit" className="mt-2 w-full">
+          <Button type="submit" className="rounded-full" size="sm">
             Post
           </Button>
+        </div>
+        <div className="flex w-full gap-x-2">
+          {imageStore?.length > 0 &&
+            imageStore?.map((imgUrl) => (
+              <div className="relative h-64 w-full" key={imgUrl}>
+                <Image
+                  src={imgUrl}
+                  alt="post-image"
+                  fill
+                  sizes="(max-width: 1200px) 50%, 33%"
+                />
+              </div>
+            ))}
         </div>
       </form>
       <UploadImageModal />

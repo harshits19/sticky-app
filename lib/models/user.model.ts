@@ -10,10 +10,17 @@ const userSchema = new mongoose.Schema({
   userLabel: { type: String },
   visibility: { type: Boolean, default: true },
   onboarded: { type: Boolean, default: false },
+  created: { type: Date, default: Date.now },
   userPosts: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Thread",
+    },
+  ],
+  followings: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
 })
