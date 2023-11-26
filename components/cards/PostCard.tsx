@@ -3,6 +3,7 @@ import { format } from "date-fns"
 import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import ReactionStrip from "@/components/shared/ReactionStrip"
 
 interface PostProps {
   content: string
@@ -17,6 +18,10 @@ interface PostProps {
     profilePhoto: string
   }
   parentId?: string | null
+  likes: string[]
+  replies: number
+  userId: string
+  comment?: boolean
 }
 const PostCard = ({
   content,
@@ -26,9 +31,13 @@ const PostCard = ({
   images,
   author,
   parentId,
+  likes,
+  replies,
+  userId,
+  comment,
 }: PostProps) => {
   return (
-    <article className="my-1 flex py-4">
+    <article className="flex border-b border-muted p-4 transition-colors duration-200 hover:bg-muted">
       <div className="h-full w-14">
         <Link href={`/profile/${author._id}`} className="contents">
           <Image
@@ -46,32 +55,29 @@ const PostCard = ({
             <Link
               href={`/profile/${author?._id.toString()}`}
               className="contents">
-              <span className="text-sm font-semibold hover:underline">
+              <span className="text-sm font-bold hover:underline">
                 {author?.name}
               </span>
               <span className="text-sm text-muted-foreground">
-                {"@" + author?.username}
+                {"@" + author?.username + " · "}
               </span>
             </Link>
-          </div>
-          <div className="flex">
             <p
-              className="pr-2 text-sm text-muted-foreground/75"
+              className="text-sm text-muted-foreground/75"
               title={format(created, "dd MMM yyyy hh:mm")}>
               {calculateTimeDifference(created)}
             </p>
-            <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted" />
           </div>
+          <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted" />
         </div>
-
-        <div className="pb-2 text-base leading-none">
+        <div className="py-2 text-base leading-none">
           <Link href={`/thread/${id}`} className="contents">
             {content}
           </Link>
         </div>
-        <div className="flex space-x-2">
-          {images?.length > 0 &&
-            images?.map((imgUrl) => (
+        {images?.length > 0 && (
+          <div className="flex gap-x-2 pb-2">
+            {images?.map((imgUrl) => (
               <div className="relative h-64 w-full" key={imgUrl}>
                 <Image
                   src={imgUrl}
@@ -81,8 +87,17 @@ const PostCard = ({
                 />
               </div>
             ))}
-        </div>
-        <div>Reactions</div>
+          </div>
+        )}
+        {!comment && (
+          <ReactionStrip
+            key={id}
+            threadId={id}
+            userId={userId}
+            likes={likes}
+            replies={replies}
+          />
+        )}
       </div>
     </article>
   )

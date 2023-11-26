@@ -20,7 +20,7 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
           name={userInfo?.name}
           imageURL={userInfo?.profilePhoto}
         />
-        <section className="w-full max-w-lg md:max-w-xl">
+        <section className="w-full sm:max-w-xl">
           <Navbar userId={userInfo?._id.toString()} />
           {children}
         </section>

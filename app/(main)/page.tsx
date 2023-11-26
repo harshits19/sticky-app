@@ -1,13 +1,18 @@
 import PostCard from "@/components/cards/PostCard"
 import { getAllPosts } from "@/lib/actions/thread.actions"
 import CreatePost from "./create-post/page"
+import { currentUser } from "@clerk/nextjs"
+import { getUser } from "@/lib/actions/user.actions"
 
 const HomePage = async () => {
   const { posts } = await getAllPosts()
+  const user = await currentUser()
+  if (!user) return null
+  const userInfo = await getUser(user.id)
   return (
     <>
       <CreatePost />
-      <div className="px-4 lg:px-8">
+      <div>
         {posts?.length === 0 ? (
           <p className="pt-8 text-center text-xl font-semibold">
             No Posts Found!
@@ -24,6 +29,9 @@ const HomePage = async () => {
                 images={post.postImages}
                 author={post.authorId}
                 parentId={post.parentId}
+                userId={userInfo._id.toString()}
+                likes={post.likes}
+                replies={post.children?.length}
               />
             )
           })

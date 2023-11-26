@@ -83,6 +83,7 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
                   src={imgUrl}
                   alt="post-image"
                   fill
+                  className="rounded-lg"
                   sizes="(max-width: 1200px) 50%, 33%"
                 />
               </div>

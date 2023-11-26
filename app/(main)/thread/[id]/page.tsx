@@ -1,10 +1,11 @@
+import Image from "next/image"
+import Link from "next/link"
+import PostCard from "@/components/cards/PostCard"
 import ThreadCard from "@/components/cards/ThreadCard"
 import CreateCommentForm from "@/components/forms/CreateCommentForm"
 import { getThreadById } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
-import Image from "next/image"
-import Link from "next/link"
 
 type Props = {
   params: {
@@ -25,6 +26,7 @@ type Post = {
   children: string[]
   created: Date
   updated: Date
+  likes: string[]
 }
 const ThreadPage = async ({ params: { id } }: Props) => {
   const post = await getThreadById(id)
@@ -32,17 +34,20 @@ const ThreadPage = async ({ params: { id } }: Props) => {
   if (!user) return null
   const userInfo = await getUser(user.id)
   return (
-    <div>
+    <>
       <ThreadCard
         key={post.authorId}
         content={post.text}
-        id={post._id.toString()}
+        id={id}
         created={post.created}
         updated={post.updated}
         images={post.postImages}
         author={post.authorId}
+        likes={post.likes}
+        replies={post.children?.length}
+        userId={userInfo._id.toString()}
       />
-      <div className="flex px-4 pt-2">
+      <div className="flex border-b border-muted px-4 pt-2">
         <div className="w-12">
           <Link
             href={`/profile/${userInfo._id.toString()}`}
@@ -64,8 +69,8 @@ const ThreadPage = async ({ params: { id } }: Props) => {
       {post?.children &&
         post?.children?.map((thread: Post) => {
           return (
-            <ThreadCard
-              key={post.authorId}
+            <PostCard
+              key={thread._id.toString()}
               content={thread.text}
               id={thread._id.toString()}
               created={thread.created}
@@ -73,10 +78,14 @@ const ThreadPage = async ({ params: { id } }: Props) => {
               images={thread.postImages}
               author={thread.authorId}
               parentId={thread?.parentId}
+              likes={post.likes}
+              replies={post.children?.length}
+              userId={userInfo._id.toString()}
+              comment
             />
           )
         })}
-    </div>
+    </>
   )
 }
 export default ThreadPage

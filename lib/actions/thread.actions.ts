@@ -148,3 +148,46 @@ export const createComment = async ({
     throw new Error(`${error}`)
   }
 }
+
+export const likePost = async ({
+  userId,
+  threadId,
+  path,
+}: {
+  userId: string
+  threadId: string
+  path: string
+}) => {
+  try {
+    connectToDB()
+    await Thread.findByIdAndUpdate(threadId, {
+      $push: { likes: userId },
+    })
+    revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+export const dislikePost = async ({
+  userId,
+  threadId,
+  path,
+}: {
+  userId: string
+  threadId: string
+  path: string
+}) => {
+  try {
+    connectToDB()
+    const currThread = await Thread.findById(threadId)
+    const allLikes = currThread.likes.filter(
+      (author: string) => author !== userId,
+    )
+    await Thread.findByIdAndUpdate(threadId, {
+      likes: allLikes,
+    })
+    revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}

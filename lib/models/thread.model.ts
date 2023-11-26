@@ -12,7 +12,7 @@ const threadSchema = new mongoose.Schema({
   updated: { type: Date, default: Date.now },
   parentId: { type: String },
   likes: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [String],
     ref: "User",
   },
   children: [

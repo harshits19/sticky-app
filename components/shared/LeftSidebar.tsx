@@ -22,7 +22,7 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
   const pathname = usePathname()
   const router = useRouter()
   return (
-    <section className="sticky top-0 hidden h-screen flex-col justify-between border-r-[1px] border-muted bg-background px-1 pb-8 pt-2 sm:flex lg:pl-4 lg:pr-16">
+    <section className="sticky top-0 hidden h-screen lg:flex-1 lg:w-full lg:max-w-xs flex-col justify-between border-r-[1px] border-muted bg-background px-1 pb-8 pt-2 sm:flex lg:pl-4">
       <div className="flex flex-col items-center lg:items-start">
         <div className="mb-4 flex items-center gap-1 px-4">
           <Link href="/" className="contents">
@@ -33,7 +33,9 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
         <Link href="/" className="contents">
           <div className="flex w-max items-center gap-x-4  rounded-full px-4 py-3 hover:bg-muted lg:px-6">
             <HomeIcon
-              className={`${pathname === "/" && "stroke-primary stroke-1"}`}
+              className={`${
+                pathname === "/" ? "fill-current" : "fill-transparent"
+              }`}
             />
             <span
               className={`hidden text-lg text-primary lg:flex ${
@@ -45,11 +47,7 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
         </Link>
         <Link href="/search" className="contents">
           <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <SearchIcon
-              className={`${
-                pathname === "/search" && "stroke-primary stroke-1"
-              }`}
-            />
+            <SearchIcon />
             <span
               className={`hidden text-lg text-primary lg:flex ${
                 pathname === "/search" && "font-bold"
@@ -60,11 +58,7 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
         </Link>
         <Link href="/create-post" className="contents">
           <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <CreateIcon
-              className={`${
-                pathname === "/create-post" && "stroke-primary stroke-1"
-              }`}
-            />
+            <CreateIcon />
             <span
               className={`hidden text-lg text-primary lg:flex ${
                 pathname === "/create-post" && "font-bold"
@@ -77,7 +71,9 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
           <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
             <HeartIcon
               className={`${
-                pathname === "/notifications" && "stroke-primary stroke-1"
+                pathname === "/notifications"
+                  ? "fill-current"
+                  : "fill-transparent"
               }`}
             />
             <span
@@ -92,7 +88,9 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
           <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
             <UserIcon
               className={`${
-                pathname === `/profile/${userId}` && "stroke-primary stroke-1"
+                pathname === `/profile/${userId}`
+                  ? "fill-current"
+                  : "fill-transparent"
               }`}
             />
             <span
@@ -109,13 +107,13 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
           <div
             role="button"
             className="flex w-full items-center justify-center rounded-full px-3 py-3 hover:bg-muted lg:px-6">
-            <div className="h-10 w-16">
+            <div className="h-10 w-12 lg:w-16">
               <Image
                 src={imageURL}
                 height={40}
                 width={40}
                 alt="profile-image"
-                className="rounded-full h-10 w-10"
+                className="h-10 w-10 rounded-full"
               />
             </div>
             <div className="hidden w-full flex-col lg:flex">
