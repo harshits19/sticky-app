@@ -13,13 +13,19 @@ const userSchema = new mongoose.Schema({
   created: { type: Date, default: Date.now },
   userPosts: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Thread",
     },
   ],
   followings: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
+      ref: "User",
+    },
+  ],
+  followers: [
+    {
+      type: String,
       ref: "User",
     },
   ],

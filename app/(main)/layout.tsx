@@ -4,7 +4,6 @@ import { redirect } from "next/navigation"
 import Bottombar from "@/components/shared/Bottombar"
 import LeftSidebar from "@/components/shared/LeftSidebar"
 import RightSidebar from "@/components/shared/RightSidebar"
-import Navbar from "@/components/shared/Navbar"
 
 const MainLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await currentUser()
@@ -20,10 +19,7 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
           name={userInfo?.name}
           imageURL={userInfo?.profilePhoto}
         />
-        <section className="w-full sm:max-w-xl">
-          <Navbar userId={userInfo?._id.toString()} />
-          {children}
-        </section>
+        <section className="w-full sm:max-w-xl">{children}</section>
         <RightSidebar />
       </main>
       <Bottombar userId={userInfo?._id.toString()} />

@@ -106,7 +106,7 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
         <DropdownMenuTrigger asChild>
           <div
             role="button"
-            className="flex w-full items-center justify-center rounded-full px-3 py-3 hover:bg-muted lg:px-6">
+            className="flex w-full items-center justify-center rounded-full px-3 py-3 hover:bg-muted lg:px-6 max-w-[264px]">
             <div className="h-10 w-12 lg:w-16">
               <Image
                 src={imageURL}

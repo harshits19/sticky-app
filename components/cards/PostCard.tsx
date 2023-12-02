@@ -4,25 +4,8 @@ import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import ReactionStrip from "@/components/shared/ReactionStrip"
+import { PostProps } from "@/types"
 
-interface PostProps {
-  content: string
-  id: string
-  created: Date
-  updated: Date
-  images: string[]
-  author: {
-    name: string
-    username: string
-    _id: string
-    profilePhoto: string
-  }
-  parentId?: string | null
-  likes: string[]
-  replies: number
-  userId: string
-  comment?: boolean
-}
 const PostCard = ({
   content,
   id,
@@ -39,7 +22,7 @@ const PostCard = ({
   return (
     <article className="flex border-b border-muted p-4 transition-colors duration-200 hover:bg-muted">
       <div className="h-full w-14">
-        <Link href={`/profile/${author._id}`} className="contents">
+        <Link href={`/profile/${author._id}`} scroll={false} className="contents">
           <Image
             src={author?.profilePhoto}
             alt="author-pic"
@@ -54,6 +37,7 @@ const PostCard = ({
           <div className="flex items-start gap-x-1">
             <Link
               href={`/profile/${author?._id.toString()}`}
+              scroll={false}
               className="contents">
               <span className="text-sm font-bold hover:underline">
                 {author?.name}
@@ -70,11 +54,11 @@ const PostCard = ({
           </div>
           <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted" />
         </div>
-        <div className="py-2 text-base leading-none">
-          <Link href={`/thread/${id}`} className="contents">
+        <Link href={`/thread/${id}`} className="contents">
+          <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
             {content}
-          </Link>
-        </div>
+          </pre>
+        </Link>
         {images?.length > 0 && (
           <div className="flex gap-x-2 pb-2">
             {images?.map((imgUrl) => (

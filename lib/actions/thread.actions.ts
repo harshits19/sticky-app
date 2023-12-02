@@ -23,6 +23,7 @@ export const createThread = async ({
       authorId,
       text: content,
       postImages: postImg,
+      parentId: null,
     })
     await User.findByIdAndUpdate(authorId, {
       $push: { userPosts: createdThread._id },
@@ -69,24 +70,44 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
 export const getPostsByAuthorId = async (authorId: any) => {
   try {
     connectToDB()
-    return await Thread.find({
+    const posts = await Thread.find({
       authorId,
       parentId: { $in: [null, undefined] },
-    }).populate({
-      path: "children",
-      model: Thread,
-      populate: [
-        {
-          path: "children",
-          model: Thread,
-          populate: {
-            path: "authorId",
-            model: User,
-            select: "_id id name username parentId profilePhoto",
-          },
-        },
-      ],
     })
+      .sort({ created: "desc" })
+      .populate({
+        path: "authorId",
+        model: User,
+        select: "_id name username profilePhoto",
+      })
+      .populate({
+        path: "children",
+        model: Thread,
+      })
+    const replies = await Thread.find({
+      authorId,
+      parentId: { $exists: true, $ne: null },
+    })
+      .sort({ created: "desc" })
+      .populate({
+        path: "authorId",
+        model: User,
+        select: "_id name username profilePhoto",
+      })
+      .populate({
+        path: "parentId",
+        model: Thread,
+        populate: {
+          path: "authorId",
+          model: User,
+          select: "_id name username profilePhoto",
+        },
+      })
+      .populate({
+        path: "children",
+        model: Thread,
+      })
+    return { posts, replies }
   } catch (error: any) {
     throw new Error(`${error}`)
   }
@@ -168,6 +189,7 @@ export const likePost = async ({
     throw new Error(`${error}`)
   }
 }
+
 export const dislikePost = async ({
   userId,
   threadId,
@@ -187,6 +209,30 @@ export const dislikePost = async ({
       likes: allLikes,
     })
     revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+export const getFollowersByAuthor = async ({
+  authorId,
+}: {
+  authorId: string
+}) => {
+  try {
+    connectToDB()
+    console.log(authorId)
+    return await User.findOne({ _id: authorId })
+      .populate({
+        path: "followers",
+        model: User,
+        select: "_id name username profilePhoto bio",
+      })
+      .populate({
+        path: "followings",
+        model: User,
+        select: "_id name username profilePhoto bio",
+      })
   } catch (error: any) {
     throw new Error(`${error}`)
   }

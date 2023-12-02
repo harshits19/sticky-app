@@ -3,6 +3,7 @@ import { likePost, dislikePost } from "@/lib/actions/thread.actions"
 import { LikeIcon, ReplyIcon, RepostIcon, ShareIcon } from "./Icons"
 import { formatNum } from "@/hooks/useFormatNum"
 import { usePathname } from "next/navigation"
+import Link from "next/link"
 
 interface Props {
   threadId: string
@@ -43,7 +44,9 @@ const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
           />
         </div>
         <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
-          <ReplyIcon className="" />
+          <Link href={`/thread/${threadId}`}>
+            <ReplyIcon className="" />
+          </Link>
         </div>
         <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
           <RepostIcon className="" />
@@ -53,9 +56,11 @@ const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
         </div>
       </div>
       <div className="flex pl-2 text-sm text-muted-foreground/90">
-        {`${formatNum(replies)} ${replies > 1 ? "replies" : "reply"}`}
-        <span className="px-1">{"·"}</span>
-        {`${formatNum(likes.length)} ${likes.length > 1 ? "likes" : "like"}`}
+        {replies > 0 &&
+          `${formatNum(replies)} ${replies > 1 ? "replies" : "reply"}`}
+        {replies > 0 && likes.length > 0 && <span className="px-1">·</span>}
+        {likes.length > 0 &&
+          `${formatNum(likes.length)} ${likes.length > 1 ? "likes" : "like"}`}
       </div>
     </div>
   )

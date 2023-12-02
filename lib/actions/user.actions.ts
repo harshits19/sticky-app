@@ -2,6 +2,7 @@
 import { connectToDB } from "@/lib/mongoose"
 import User from "@/lib/models/user.model"
 import { revalidatePath } from "next/cache"
+import { currentUser } from "@clerk/nextjs"
 
 interface userProps {
   userId: string
@@ -59,6 +60,50 @@ export const getUserByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
     return await User.findOne({ _id: authorId })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+export const followUser = async (
+  authorId: string,
+  userId: string,
+  pathname: string,
+) => {
+  try {
+    connectToDB()
+    await User.findByIdAndUpdate(userId, {
+      $push: { followings: authorId },
+    })
+    await User.findByIdAndUpdate(authorId, {
+      $push: { followers: userId },
+    })
+    revalidatePath(pathname)
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+export const unfollowUser = async (
+  authorId: string,
+  userId: string,
+  pathname: string,
+) => {
+  try {
+    connectToDB()
+    const following = await User.findById(userId)
+    const author = await User.findById(authorId)
+    const newFollowings = following.followings.filter(
+      (followingId: string) => followingId !== authorId,
+    )
+    await User.findByIdAndUpdate(userId, {
+      followings: newFollowings,
+    })
+    const newFollowers = author.followers.filter(
+      (followerId: string) => followerId !== userId,
+    )
+    await User.findByIdAndUpdate(authorId, {
+      followers: newFollowers,
+    })
+    revalidatePath(pathname)
   } catch (error: any) {
     throw new Error(`${error}`)
   }

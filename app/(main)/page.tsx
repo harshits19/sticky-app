@@ -3,6 +3,7 @@ import { getAllPosts } from "@/lib/actions/thread.actions"
 import CreatePost from "./create-post/page"
 import { currentUser } from "@clerk/nextjs"
 import { getUser } from "@/lib/actions/user.actions"
+import Navbar from "@/components/shared/Navbar"
 
 const HomePage = async () => {
   const { posts } = await getAllPosts()
@@ -11,6 +12,7 @@ const HomePage = async () => {
   const userInfo = await getUser(user.id)
   return (
     <>
+      <Navbar authorId={userInfo._id.toString()} />
       <CreatePost />
       <div>
         {posts?.length === 0 ? (

@@ -31,12 +31,12 @@ const ThreadCard = ({
   likes,
   replies,
   userId,
-  parentId
+  parentId,
 }: ThreadProps) => {
   return (
     <article className="flex border-y border-muted p-4">
       <div className="h-full w-14">
-        <Link href={`/profile/${author._id}`} className="contents">
+        <Link href={`/profile/${author._id}`} scroll={false} className="contents">
           <Image
             src={author?.profilePhoto}
             alt="author-pic"
@@ -48,14 +48,15 @@ const ThreadCard = ({
       </div>
       <div className="w-full">
         <div className="flex justify-between">
-          <div className="flex gap-x-1">
+          <div className="flex flex-col">
             <Link
               href={`/profile/${author?._id.toString()}`}
+              scroll={false}
               className="contents">
-              <span className="text-sm font-bold hover:underline">
+              <span className="text-sm font-bold hover:underline leading-4">
                 {author?.name}
               </span>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground leading-4">
                 {"@" + author?.username}
               </span>
             </Link>
@@ -79,7 +80,7 @@ const ThreadCard = ({
             ))}
           </div>
         )}
-        <div className="pb-2 text-sm text-muted-foreground">
+        <div className="pb-2 text-[13px] text-muted-foreground">
           {format(created, "hh:mm aa · MMM dd,yyyy")}
         </div>
         <ReactionStrip

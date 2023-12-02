@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
 import PostCard from "@/components/cards/PostCard"
 import ThreadCard from "@/components/cards/ThreadCard"
 import CreateCommentForm from "@/components/forms/CreateCommentForm"
@@ -7,6 +8,18 @@ import { getThreadById } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
 import { Post } from "@/types"
+import Navbar from "@/components/shared/Navbar"
+
+export async function generateMetadata({
+  params: { id },
+}: {
+  params: { id: string }
+}): Promise<Metadata> {
+  const post = await getThreadById(id)
+  return {
+    title: `@${post?.authorId?.username} · ${post?.text?.slice(0, 100)}`,
+  }
+}
 
 const ThreadPage = async ({
   params: { id },
@@ -21,6 +34,7 @@ const ThreadPage = async ({
   const userInfo = await getUser(user.id)
   return (
     <>
+      <Navbar authorId={userInfo._id?.toString()} />
       <ThreadCard
         key={post.authorId}
         content={post.text}
