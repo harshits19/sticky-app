@@ -1,11 +1,18 @@
 import mongoose from "mongoose"
 
-type PostProps = {
-  _id: mongoose.Schema.Types.ObjectId
-  authorId: string
+type Post = {
+  _id: string
+  authorId: {
+    name: string
+    username: string
+    _id: string
+    profilePhoto: string
+  }
   text: string
   postImages: string[]
+  parentId: string
   children: string[]
   created: Date
   updated: Date
+  likes: string[]
 }

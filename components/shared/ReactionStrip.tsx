@@ -14,7 +14,8 @@ interface Props {
 const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
   const pathname = usePathname()
   const status = likes.find((like) => userId === like) ? true : false
-  const handleReaction = async () => {
+  const handleReaction = async (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (status)
       await dislikePost({
         userId,
@@ -34,7 +35,7 @@ const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
         <div
           id={threadId}
           className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
-          onClick={handleReaction}>
+          onClick={(e) => handleReaction(e)}>
           <LikeIcon
             className={
               status ? "fill-red-500 stroke-red-500" : "stroke-current"

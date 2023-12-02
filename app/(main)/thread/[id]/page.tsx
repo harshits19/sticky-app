@@ -6,29 +6,15 @@ import CreateCommentForm from "@/components/forms/CreateCommentForm"
 import { getThreadById } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
+import { Post } from "@/types"
 
-type Props = {
+const ThreadPage = async ({
+  params: { id },
+}: {
   params: {
     id: string
   }
-}
-type Post = {
-  _id: string
-  authorId: {
-    name: string
-    username: string
-    _id: string
-    profilePhoto: string
-  }
-  text: string
-  postImages: string[]
-  parentId: string
-  children: string[]
-  created: Date
-  updated: Date
-  likes: string[]
-}
-const ThreadPage = async ({ params: { id } }: Props) => {
+}) => {
   const post = await getThreadById(id)
   const user = await currentUser()
   if (!user) return null
@@ -78,8 +64,8 @@ const ThreadPage = async ({ params: { id } }: Props) => {
               images={thread.postImages}
               author={thread.authorId}
               parentId={thread?.parentId}
-              likes={post.likes}
-              replies={post.children?.length}
+              likes={thread?.likes}
+              replies={thread.children?.length}
               userId={userInfo._id.toString()}
               comment
             />

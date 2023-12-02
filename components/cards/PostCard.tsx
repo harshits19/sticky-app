@@ -89,15 +89,13 @@ const PostCard = ({
             ))}
           </div>
         )}
-        {!comment && (
-          <ReactionStrip
-            key={id}
-            threadId={id}
-            userId={userId}
-            likes={likes}
-            replies={replies}
-          />
-        )}
+        <ReactionStrip
+          key={id}
+          threadId={id}
+          userId={userId}
+          likes={likes}
+          replies={replies}
+        />
       </div>
     </article>
   )
