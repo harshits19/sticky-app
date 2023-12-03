@@ -3,42 +3,28 @@ import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import ReactionStrip from "@/components/shared/ReactionStrip"
+import ImageContainer from "../shared/ImageContainer"
+import { PostCardProps } from "@/types"
 
-interface ThreadProps {
-  content: string
-  id: string
-  created: Date
-  updated: Date
-  images: string[]
-  author: {
-    name: string
-    username: string
-    _id: string
-    profilePhoto: string
-  }
-  likes: string[]
-  replies: number
-  userId: string
-  parentId?: string | null
-}
 const ThreadCard = ({
-  content,
-  id,
+  text,
+  _id,
   created,
-  updated,
-  images,
-  author,
+  postImages,
+  authorId,
   likes,
   replies,
   userId,
-  parentId,
-}: ThreadProps) => {
+}: PostCardProps) => {
   return (
     <article className="flex border-y border-muted p-4">
       <div className="h-full w-14">
-        <Link href={`/profile/${author._id}`} scroll={false} className="contents">
+        <Link
+          href={`/profile/${authorId._id}`}
+          scroll={false}
+          className="contents">
           <Image
-            src={author?.profilePhoto}
+            src={authorId?.profilePhoto}
             alt="author-pic"
             height={40}
             width={40}
@@ -50,42 +36,29 @@ const ThreadCard = ({
         <div className="flex justify-between">
           <div className="flex flex-col">
             <Link
-              href={`/profile/${author?._id.toString()}`}
+              href={`/profile/${authorId?._id.toString()}`}
               scroll={false}
               className="contents">
-              <span className="text-sm font-bold hover:underline leading-4">
-                {author?.name}
+              <span className="text-sm font-bold leading-4 hover:underline">
+                {authorId?.name}
               </span>
-              <span className="text-sm text-muted-foreground leading-4">
-                {"@" + author?.username}
+              <span className="text-sm leading-4 text-muted-foreground">
+                {"@" + authorId?.username}
               </span>
             </Link>
           </div>
           <MoreHorizontal className="h-7 w-7 rounded-full p-1 hover:bg-muted" />
         </div>
         <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
-          {content}
+          {text}
         </pre>
-        {images?.length > 0 && (
-          <div className="flex gap-x-2 pb-2">
-            {images?.map((imgUrl) => (
-              <div className="relative h-64 w-full" key={imgUrl}>
-                <Image
-                  src={imgUrl}
-                  alt="post-image"
-                  className="rounded-xl"
-                  fill
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <ImageContainer images={postImages} />
         <div className="pb-2 text-[13px] text-muted-foreground">
           {format(created, "hh:mm aa · MMM dd,yyyy")}
         </div>
         <ReactionStrip
-          key={id}
-          threadId={id}
+          key={_id}
+          threadId={_id}
           userId={userId}
           likes={likes}
           replies={replies}

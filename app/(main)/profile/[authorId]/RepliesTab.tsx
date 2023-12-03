@@ -1,19 +1,12 @@
+import Image from "next/image"
+import Link from "next/link"
 import PostCard from "@/components/cards/PostCard"
 import ReactionStrip from "@/components/shared/ReactionStrip"
 import { calculateTimeDifference } from "@/hooks/useDateDistance"
-import { PostProps } from "@/types"
 import { format } from "date-fns"
 import { MoreHorizontal } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
 
-const RepliesTab = ({
-  replies,
-  userId,
-}: {
-  replies: PostProps[]
-  userId: string
-}) => {
+const RepliesTab = ({ replies, userId }: { replies: any; userId: string }) => {
   return replies.map((thread: any) => (
     <>
       <article
@@ -83,12 +76,11 @@ const RepliesTab = ({
       </article>
       <PostCard
         key={thread._id.toString()}
-        content={thread.text}
-        id={thread._id.toString()}
+        text={thread.text}
+        _id={thread._id.toString()}
         created={thread.created}
-        updated={thread.updated}
-        images={thread.postImages}
-        author={thread.authorId}
+        postImages={thread.postImages}
+        authorId={thread.authorId}
         parentId={thread?.parentId}
         likes={thread?.likes}
         replies={thread.children?.length}

@@ -1,8 +1,7 @@
 "use client"
+import FollowButton from "@/components/shared/FollowButton"
 import { Button } from "@/components/ui/button"
-import { followUser, unfollowUser } from "@/lib/actions/user.actions"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 const MidSection = ({
   userId,
   authorId,
@@ -12,11 +11,6 @@ const MidSection = ({
   authorId: string
   status: boolean
 }) => {
-  const pathname = usePathname()
-  const handleAction = async () => {
-    if (status) unfollowUser(authorId, userId, pathname)
-    else followUser(authorId, userId, pathname)
-  }
   return (
     <>
       {userId === authorId && (
@@ -25,13 +19,12 @@ const MidSection = ({
         </Button>
       )}
       {userId !== authorId && (
-        <Button
-          className="mt-2 w-full"
-          size="sm"
-          onClick={handleAction}
-          variant={status ? "outline" : "default"}>
-          {status ? "Unfollow" : "Follow"}
-        </Button>
+        <FollowButton
+          authorId={authorId}
+          userId={userId}
+          status={status}
+          className={"mt-2 w-full"}
+        />
       )}
     </>
   )

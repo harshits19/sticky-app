@@ -1,30 +1,32 @@
-import { calculateTimeDifference } from "@/hooks/useDateDistance"
-import { format } from "date-fns"
-import { MoreHorizontal } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
+import { format } from "date-fns"
+import ImageContainer from "@/components/shared/ImageContainer"
 import ReactionStrip from "@/components/shared/ReactionStrip"
-import { PostProps } from "@/types"
+import { calculateTimeDifference } from "@/hooks/useDateDistance"
+import { PostCardProps } from "@/types"
+import { MoreHorizontal } from "lucide-react"
 
 const PostCard = ({
-  content,
-  id,
+  text,
+  _id,
   created,
-  updated,
-  images,
-  author,
-  parentId,
+  postImages,
+  authorId,
   likes,
   replies,
   userId,
   comment,
-}: PostProps) => {
+}: PostCardProps) => {
   return (
     <article className="flex border-b border-muted p-4 transition-colors duration-200 hover:bg-muted">
       <div className="h-full w-14">
-        <Link href={`/profile/${author._id}`} scroll={false} className="contents">
+        <Link
+          href={`/profile/${authorId?._id}`}
+          scroll={false}
+          className="contents">
           <Image
-            src={author?.profilePhoto}
+            src={authorId?.profilePhoto}
             alt="author-pic"
             height={40}
             width={40}
@@ -36,14 +38,14 @@ const PostCard = ({
         <div className="flex justify-between">
           <div className="flex items-start gap-x-1">
             <Link
-              href={`/profile/${author?._id.toString()}`}
+              href={`/profile/${authorId?._id.toString()}`}
               scroll={false}
               className="contents">
               <span className="text-sm font-bold hover:underline">
-                {author?.name}
+                {authorId?.name}
               </span>
               <span className="text-sm text-muted-foreground">
-                {"@" + author?.username + " · "}
+                {"@" + authorId?.username + " · "}
               </span>
             </Link>
             <p
@@ -54,28 +56,15 @@ const PostCard = ({
           </div>
           <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted" />
         </div>
-        <Link href={`/thread/${id}`} className="contents">
+        <Link href={`/thread/${_id}`} className="contents">
           <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
-            {content}
+            {text}
           </pre>
         </Link>
-        {images?.length > 0 && (
-          <div className="flex gap-x-2 pb-2">
-            {images?.map((imgUrl) => (
-              <div className="relative h-64 w-full" key={imgUrl}>
-                <Image
-                  src={imgUrl}
-                  alt="post-image"
-                  className="rounded-xl"
-                  fill
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <ImageContainer images={postImages} />
         <ReactionStrip
-          key={id}
-          threadId={id}
+          key={_id}
+          threadId={_id}
           userId={userId}
           likes={likes}
           replies={replies}

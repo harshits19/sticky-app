@@ -1,9 +1,9 @@
 import PostCard from "@/components/cards/PostCard"
+import Navbar from "@/components/shared/Navbar"
+import CreatePost from "@/app/(main)/create-post/page"
 import { getAllPosts } from "@/lib/actions/thread.actions"
-import CreatePost from "./create-post/page"
 import { currentUser } from "@clerk/nextjs"
 import { getUser } from "@/lib/actions/user.actions"
-import Navbar from "@/components/shared/Navbar"
 
 const HomePage = async () => {
   const { posts } = await getAllPosts()
@@ -24,13 +24,11 @@ const HomePage = async () => {
             return (
               <PostCard
                 key={post.authorId}
-                content={post.text}
-                id={post._id.toString()}
+                text={post.text}
+                _id={post._id.toString()}
                 created={post.created}
-                updated={post.updated}
-                images={post.postImages}
-                author={post.authorId}
-                parentId={post.parentId}
+                postImages={post.postImages}
+                authorId={post.authorId}
                 userId={userInfo._id.toString()}
                 likes={post.likes}
                 replies={post.children?.length}

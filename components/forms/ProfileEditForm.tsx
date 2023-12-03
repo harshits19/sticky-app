@@ -17,6 +17,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { UserValidation } from "@/lib/validations/user"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUser } from "@/lib/actions/user.actions"
@@ -178,13 +185,28 @@ const ProfileEditForm = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="category"
-                    className="no-focus"
-                    {...field}
-                  />
-                </FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Science & Technology">Science & Technology</SelectItem>
+                    <SelectItem value="Artist">Artist</SelectItem>
+                    <SelectItem value="Financial Services">Financial Services</SelectItem>
+                    <SelectItem value="Influencer">Influencer</SelectItem>
+                    <SelectItem value="Journalist">Journalist</SelectItem>
+                    <SelectItem value="Entrepreneur">Entrepreneur</SelectItem>
+                    <SelectItem value="Media Personality">Media Personality</SelectItem>
+                    <SelectItem value="Education">Education</SelectItem>
+                    <SelectItem value="Aviation">Aviation</SelectItem>
+                    <SelectItem value="Entertainment">Entertainment</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -201,7 +223,7 @@ const ProfileEditForm = ({
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="flex space-x-1">
+                    className="flex space-x-1 pt-1">
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
                         <RadioGroupItem value={true} />

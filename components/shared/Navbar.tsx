@@ -52,7 +52,7 @@ const Navbar = ({
           {pathname.startsWith(`/profile/`) && (
             <div className="flex flex-col justify-center pl-4">
               <span className="text-lg font-bold leading-5">{authorName}</span>
-              {pathname.startsWith(`/profile/${authorId}/follow`) ? (
+              {pathname.startsWith(`/profile/${authorId}/follow`) || pathname.startsWith(`/profile/edit`) ? (
                 <span className="text-xs leading-4 text-muted-foreground/60">
                   {"@" + username}
                 </span>

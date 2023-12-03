@@ -1,7 +1,6 @@
 import Navbar from "@/components/shared/Navbar"
 import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
-import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
+import { getUserByAuthorId } from "@/lib/actions/user.actions"
 import mongoose from "mongoose"
 
 const ProfileLayout = async ({

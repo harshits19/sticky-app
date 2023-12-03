@@ -1,6 +1,5 @@
 "use client"
 import * as z from "zod"
-import Image from "next/image"
 import { useForm } from "react-hook-form"
 import UploadImageModal from "../modals/UploadImageModal"
 import { Button } from "@/components/ui/button"
@@ -17,6 +16,7 @@ import { Textarea } from "../ui/textarea"
 import { createComment } from "@/lib/actions/thread.actions"
 import { ThreadValidation } from "@/lib/validations/thread"
 import { ImageIcon } from "lucide-react"
+import ImageContainer from "../shared/ImageContainer"
 
 const CreateCommentForm = ({
   parentId,
@@ -70,6 +70,7 @@ const CreateCommentForm = ({
             </FormItem>
           )}
         />
+        <ImageContainer images={imageStore} />
         <div className="flex items-center justify-between border-t border-muted px-4 py-2">
           <div
             onClick={onOpen}
@@ -79,20 +80,6 @@ const CreateCommentForm = ({
           <Button type="submit" className="rounded-full" size="sm">
             Reply
           </Button>
-        </div>
-        <div className="flex w-full gap-x-2">
-          {imageStore?.length > 0 &&
-            imageStore?.map((imgUrl) => (
-              <div className="relative h-64 w-full" key={imgUrl}>
-                <Image
-                  src={imgUrl}
-                  alt="post-image"
-                  fill
-                  className="rounded-lg"
-                  sizes="(max-width: 1200px) 50%, 33%"
-                />
-              </div>
-            ))}
         </div>
       </form>
       <UploadImageModal />

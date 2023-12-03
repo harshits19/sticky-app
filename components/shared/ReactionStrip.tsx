@@ -1,9 +1,14 @@
 "use client"
-import { likePost, dislikePost } from "@/lib/actions/thread.actions"
-import { LikeIcon, ReplyIcon, RepostIcon, ShareIcon } from "./Icons"
-import { formatNum } from "@/hooks/useFormatNum"
-import { usePathname } from "next/navigation"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { formatNum } from "@/hooks/useFormatNum"
+import { likePost, dislikePost } from "@/lib/actions/thread.actions"
+import {
+  LikeIcon,
+  ReplyIcon,
+  RepostIcon,
+  ShareIcon,
+} from "@/components/shared/Icons"
 
 interface Props {
   threadId: string

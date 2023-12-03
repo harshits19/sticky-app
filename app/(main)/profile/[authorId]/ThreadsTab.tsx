@@ -1,24 +1,17 @@
 import PostCard from "@/components/cards/PostCard"
-import { PostProps } from "@/types"
+import { Post } from "@/types"
 
-const ThreadsTab = ({
-  posts,
-  userId,
-}: {
-  posts: PostProps[]
-  userId: string
-}) => {
+const ThreadsTab = ({ posts, userId }: { posts: any; userId: string }) => {
   return (
     <div>
-      {posts?.map((thread: any) => (
+      {posts?.map((thread: Post) => (
         <PostCard
           key={thread._id.toString()}
-          content={thread.text}
-          id={thread._id.toString()}
+          text={thread.text}
+          _id={thread._id.toString()}
           created={thread.created}
-          updated={thread.updated}
-          images={thread.postImages}
-          author={thread.authorId}
+          postImages={thread.postImages}
+          authorId={thread.authorId}
           parentId={thread?.parentId}
           likes={thread?.likes}
           replies={thread.children?.length}

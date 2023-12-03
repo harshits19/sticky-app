@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
+import Navbar from "@/components/shared/Navbar"
 import PostCard from "@/components/cards/PostCard"
 import ThreadCard from "@/components/cards/ThreadCard"
 import CreateCommentForm from "@/components/forms/CreateCommentForm"
@@ -8,7 +9,6 @@ import { getThreadById } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
 import { Post } from "@/types"
-import Navbar from "@/components/shared/Navbar"
 
 export async function generateMetadata({
   params: { id },
@@ -37,12 +37,11 @@ const ThreadPage = async ({
       <Navbar authorId={userInfo._id?.toString()} />
       <ThreadCard
         key={post.authorId}
-        content={post.text}
-        id={id}
+        text={post.text}
+        _id={id}
         created={post.created}
-        updated={post.updated}
-        images={post.postImages}
-        author={post.authorId}
+        postImages={post.postImages}
+        authorId={post.authorId}
         likes={post.likes}
         replies={post.children?.length}
         userId={userInfo._id.toString()}
@@ -71,13 +70,11 @@ const ThreadPage = async ({
           return (
             <PostCard
               key={thread._id.toString()}
-              content={thread.text}
-              id={thread._id.toString()}
+              text={thread.text}
+              _id={thread._id.toString()}
               created={thread.created}
-              updated={thread.updated}
-              images={thread.postImages}
-              author={thread.authorId}
-              parentId={thread?.parentId}
+              postImages={thread.postImages}
+              authorId={thread.authorId}
               likes={thread?.likes}
               replies={thread.children?.length}
               userId={userInfo._id.toString()}

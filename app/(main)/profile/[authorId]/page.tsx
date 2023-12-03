@@ -2,7 +2,7 @@ import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
 import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
 import { format } from "date-fns"
-import { CalendarDays, LinkIcon } from "lucide-react"
+import { Briefcase, CalendarDays, LinkIcon } from "lucide-react"
 import mongoose from "mongoose"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -75,18 +75,25 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
           </Link>
         </div>
         <div className="flex gap-x-4 py-2">
+          {author?.userLabel && (
+            <span className="flex items-center text-sm">
+              <Briefcase className="h-4 w-4 pr-1" />
+
+              {author?.userLabel}
+            </span>
+          )}
+          {author?.link && (
+            <span className="flex items-center text-sm">
+              <LinkIcon className="h-4 w-4 pr-1" />
+              {author?.link}
+            </span>
+          )}
           <span
             className="flex items-center text-sm"
             title={`${format(author.created, "dd MMM yyyy, hh:mm")}`}>
             <CalendarDays className="h-4 w-4 pr-1" />
             {`Joined ${format(author.created, "MMM yyyy")}`}
           </span>
-          {author?.link && (
-            <span className="flex items-center text-sm text-muted-foreground">
-              <LinkIcon className="h-4 w-4 pr-1" />
-              {author?.link}
-            </span>
-          )}
         </div>
         <MidSection userId={userId} authorId={authorId} status={isFollowing} />
         <Tabs defaultValue="posts" className="mt-4 w-full">

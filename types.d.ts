@@ -1,22 +1,21 @@
 import mongoose from "mongoose"
 
-interface PostProps {
-  content: string
-  id: string
+interface PostCardProps {
+  text: string
+  _id: string
   created: Date
-  updated: Date
-  images: string[]
-  author: {
+  postImages: string[]
+  authorId: {
     name: string
     username: string
     _id: string
     profilePhoto: string
   }
-  parentId?: string | null
+  userId: string
   likes: string[]
   replies: number
+  parentId?: string | null
   comment?: boolean
-  userId: string
 }
 
 type Post = {

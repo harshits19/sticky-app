@@ -221,17 +221,16 @@ export const getFollowersByAuthor = async ({
 }) => {
   try {
     connectToDB()
-    console.log(authorId)
     return await User.findOne({ _id: authorId })
       .populate({
         path: "followers",
         model: User,
-        select: "_id name username profilePhoto bio",
+        select: "_id name username profilePhoto bio followers",
       })
       .populate({
         path: "followings",
         model: User,
-        select: "_id name username profilePhoto bio",
+        select: "_id name username profilePhoto bio followers",
       })
   } catch (error: any) {
     throw new Error(`${error}`)

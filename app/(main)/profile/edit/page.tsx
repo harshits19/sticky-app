@@ -1,7 +1,12 @@
 import ProfileEditForm from "@/components/forms/ProfileEditForm"
+import Navbar from "@/components/shared/Navbar"
 import { getUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
+import type { Metadata } from "next"
 
+export const metadata: Metadata = {
+  title: "Edit Profile",
+}
 const EditPage = async () => {
   const user = await currentUser()
   if (!user) return null
@@ -25,12 +30,19 @@ const EditPage = async () => {
     visibility: userInfo?.visibility ? userInfo?.visibility : true,
   }
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold">Edit Profile</h2>
-      <div className="flex justify-center">
-        <ProfileEditForm user={userData} btnTitle="Update" editForm />
+    <>
+      <Navbar
+        authorId={userInfo._id.toString()}
+        authorName={userInfo?.name}
+        username={userInfo?.username}
+      />
+      <div className="p-4">
+        <h2 className="text-xl font-bold">Edit Profile</h2>
+        <div className="flex justify-center">
+          <ProfileEditForm user={userData} btnTitle="Update" editForm />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 export default EditPage

@@ -1,6 +1,5 @@
 "use client"
 import * as z from "zod"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import UploadImageModal from "../modals/UploadImageModal"
@@ -18,6 +17,7 @@ import { Textarea } from "../ui/textarea"
 import { createThread } from "@/lib/actions/thread.actions"
 import { ThreadValidation } from "@/lib/validations/thread"
 import { ImageIcon } from "lucide-react"
+import ImageContainer from "../shared/ImageContainer"
 
 const CreatePostForm = ({ authorId }: { authorId: string }) => {
   const { onOpen, imageStore, clearImgStore } = useProfilePhoto()
@@ -65,6 +65,7 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
             </FormItem>
           )}
         />
+        <ImageContainer images={imageStore} />
         <div className="flex items-center justify-between border-t border-muted px-4 py-2">
           <div
             onClick={onOpen}
@@ -74,20 +75,6 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
           <Button type="submit" className="rounded-full" size="sm">
             Post
           </Button>
-        </div>
-        <div className="flex w-full gap-x-2">
-          {imageStore?.length > 0 &&
-            imageStore?.map((imgUrl) => (
-              <div className="relative h-64 w-full" key={imgUrl}>
-                <Image
-                  src={imgUrl}
-                  alt="post-image"
-                  fill
-                  className="rounded-lg"
-                  sizes="(max-width: 1200px) 50%, 33%"
-                />
-              </div>
-            ))}
         </div>
       </form>
       <UploadImageModal />
