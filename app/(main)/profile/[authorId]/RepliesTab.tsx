@@ -5,8 +5,15 @@ import ReactionStrip from "@/components/shared/ReactionStrip"
 import { calculateTimeDifference } from "@/hooks/useDateDistance"
 import { format } from "date-fns"
 import { MoreHorizontal } from "lucide-react"
+import { User } from "@/types"
 
-const RepliesTab = ({ replies, userId }: { replies: any; userId: string }) => {
+const RepliesTab = ({
+  replies,
+  userInfo,
+}: {
+  replies: any
+  userInfo: User
+}) => {
   return (
     <>
       {replies.length === 0 ? (
@@ -76,9 +83,10 @@ const RepliesTab = ({ replies, userId }: { replies: any; userId: string }) => {
                 )}
                 <ReactionStrip
                   threadId={thread.parentId._id.toString()}
-                  userId={userId}
+                  userId={userInfo._id}
                   likes={thread.parentId.likes}
                   replies={thread.parentId.children?.length}
+                  reposts={userInfo.reposts}
                 />
               </div>
             </article>
@@ -91,7 +99,8 @@ const RepliesTab = ({ replies, userId }: { replies: any; userId: string }) => {
               parentId={thread?.parentId}
               likes={thread?.likes}
               replies={thread.children?.length}
-              userId={userId}
+              reposts={userInfo?.reposts}
+              userId={userInfo?._id}
               comment
             />
           </div>

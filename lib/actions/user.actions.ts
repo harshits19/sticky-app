@@ -2,7 +2,6 @@
 import { connectToDB } from "@/lib/mongoose"
 import User from "@/lib/models/user.model"
 import { revalidatePath } from "next/cache"
-import { currentUser } from "@clerk/nextjs"
 
 interface userProps {
   userId: string

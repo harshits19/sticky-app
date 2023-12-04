@@ -13,6 +13,7 @@ interface PostCardProps {
   }
   userId: string
   likes: string[]
+  reposts: string[]
   replies: number
   parentId?: string | null
   comment?: boolean
@@ -31,6 +32,22 @@ type Post = {
   parentId: string
   children: string[]
   created: Date
-  updated: Date
   likes: string[]
+}
+
+type User = {
+  _id: string
+  bio: string
+  created: Date
+  followers: string
+  followings: string[]
+  link: string
+  name: string
+  onboarded: boolean
+  profilePhoto: string
+  reposts: string[]
+  userLabel: string
+  userPosts: string[]
+  username: string
+  visibility: string
 }

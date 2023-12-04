@@ -107,7 +107,21 @@ export const getPostsByAuthorId = async (authorId: any) => {
         path: "children",
         model: Thread,
       })
-    return { posts, replies }
+    const reposts = await User.findOne({
+      _id: authorId,
+    })
+      .select("reposts")
+      .sort({ created: "desc" })
+      .populate({
+        path: "reposts",
+        model: Thread,
+        populate: {
+          path: "authorId",
+          model: User,
+          select: "_id name username profilePhoto",
+        },
+      })
+    return { posts, replies, reposts }
   } catch (error: any) {
     throw new Error(`${error}`)
   }
@@ -232,6 +246,56 @@ export const getFollowersByAuthor = async ({
         model: User,
         select: "_id name username profilePhoto bio followers",
       })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+export const repost = async ({
+  userId,
+  threadId,
+  path,
+}: {
+  userId: string
+  threadId: string
+  path: string
+}) => {
+  try {
+    connectToDB()
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      {
+        $push: { reposts: threadId },
+      },
+    )
+    revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+export const unrepost = async ({
+  userId,
+  threadId,
+  path,
+}: {
+  userId: string
+  threadId: string
+  path: string
+}) => {
+  try {
+    connectToDB()
+    const user = await User.findOne({ _id: userId })
+    if (!user) throw new Error(`User not found`)
+    const updatedReposts = user.reposts.filter(
+      (thread: string) => thread !== threadId,
+    )
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      {
+        reposts: updatedReposts,
+      },
+    )
+    revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
   }

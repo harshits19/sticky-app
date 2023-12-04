@@ -17,6 +17,7 @@ const PostCard = ({
   replies,
   userId,
   comment,
+  reposts,
 }: PostCardProps) => {
   return (
     <article className="flex border-b border-muted p-4 transition-colors duration-200 hover:bg-muted">
@@ -68,6 +69,7 @@ const PostCard = ({
           userId={userId}
           likes={likes}
           replies={replies}
+          reposts={reposts}
         />
       </div>
     </article>

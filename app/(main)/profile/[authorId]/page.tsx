@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
 import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
 import { Briefcase, CalendarDays, LinkIcon } from "lucide-react"
+import RepostsTab from "./RepostsTab"
 
 type Props = {
   params: {
@@ -28,15 +29,15 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
   const author = await getUserByAuthorId(authorId)
   const user = await currentUser()
   if (!user) return null
-  const { _id } = await getUser(user.id)
-  const userId = _id.toString()
+  const userInfo = await getUser(user.id)
+  const userId = userInfo._id.toString()
   const isFollowing = author.followers.find(
     (author: string) => author === userId,
   )
     ? true
     : false
   const formatAuthorId = new mongoose.Types.ObjectId(authorId)
-  const { posts, replies } = await getPostsByAuthorId(formatAuthorId)
+  const { posts, replies, reposts } = await getPostsByAuthorId(formatAuthorId)
 
   return (
     <>
@@ -108,12 +109,23 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
             <TabsTrigger value="reposts">Reposts</TabsTrigger>
           </TabsList>
           <TabsContent value="posts">
-            <ThreadsTab posts={posts} userId={userId} />
+            <ThreadsTab
+              posts={posts}
+              userInfo={JSON.parse(JSON.stringify(userInfo))}
+            />
           </TabsContent>
           <TabsContent value="replies">
-            <RepliesTab replies={replies} userId={userId} />
+            <RepliesTab
+              replies={replies}
+              userInfo={JSON.parse(JSON.stringify(userInfo))}
+            />
           </TabsContent>
-          <TabsContent value="reposts">News</TabsContent>
+          <TabsContent value="reposts">
+            <RepostsTab
+              reposts={reposts.reposts}
+              userInfo={JSON.parse(JSON.stringify(userInfo))}
+            />
+          </TabsContent>
         </Tabs>
       </section>
     </>

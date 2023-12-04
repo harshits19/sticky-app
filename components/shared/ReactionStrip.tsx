@@ -2,7 +2,12 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { formatNum } from "@/hooks/useFormatNum"
-import { likePost, dislikePost } from "@/lib/actions/thread.actions"
+import {
+  likePost,
+  dislikePost,
+  repost,
+  unrepost,
+} from "@/lib/actions/thread.actions"
 import {
   LikeIcon,
   ReplyIcon,
@@ -14,15 +19,25 @@ interface Props {
   threadId: string
   userId: string
   likes: string[]
+  reposts: string[]
   replies: number
 }
 
-const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
+const ReactionStrip = ({
+  threadId,
+  userId,
+  likes,
+  replies,
+  reposts,
+}: Props) => {
   const pathname = usePathname()
-  const status = likes.find((like) => userId === like) ? true : false
+  const isLiked = likes?.find((like) => userId === like) ? true : false
+  const isReposted = reposts?.find((thread) => thread === threadId)
+    ? true
+    : false
   const handleReaction = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (status)
+    if (isLiked)
       await dislikePost({
         userId,
         threadId,
@@ -30,6 +45,21 @@ const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
       })
     else
       await likePost({
+        userId,
+        threadId,
+        path: pathname,
+      })
+  }
+  const handleRepost = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (isReposted)
+      await unrepost({
+        userId,
+        threadId,
+        path: pathname,
+      })
+    else
+      await repost({
         userId,
         threadId,
         path: pathname,
@@ -44,8 +74,9 @@ const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
           onClick={(e) => handleReaction(e)}>
           <LikeIcon
             className={
-              status ? "fill-red-500 stroke-red-500" : "stroke-current"
+              isLiked ? "fill-red-500 stroke-red-500" : "stroke-current"
             }
+            title={isLiked ? "Unlike" : "Like"}
           />
         </div>
         <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
@@ -53,8 +84,13 @@ const ReactionStrip = ({ threadId, userId, likes, replies }: Props) => {
             <ReplyIcon className="" />
           </Link>
         </div>
-        <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
-          <RepostIcon className="" />
+        <div
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
+          onClick={handleRepost}>
+          <RepostIcon
+            className={isReposted ? " fill-green-500" : "fill-current"}
+            title={isReposted ? "Unpost" : "Repost"}
+          />
         </div>
         <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
           <ShareIcon className="" />

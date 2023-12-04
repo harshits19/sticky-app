@@ -15,6 +15,7 @@ const ThreadCard = ({
   likes,
   replies,
   userId,
+  reposts,
 }: PostCardProps) => {
   return (
     <article className="flex border-y border-muted p-4">
@@ -62,6 +63,7 @@ const ThreadCard = ({
           userId={userId}
           likes={likes}
           replies={replies}
+          reposts={reposts}
         />
       </div>
     </article>

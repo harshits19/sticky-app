@@ -32,6 +32,7 @@ const HomePage = async () => {
                 userId={userInfo._id.toString()}
                 likes={post.likes}
                 replies={post.children?.length}
+                reposts={userInfo.reposts}
               />
             )
           })

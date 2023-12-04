@@ -45,6 +45,7 @@ const ThreadPage = async ({
         likes={post.likes}
         replies={post.children?.length}
         userId={userInfo._id.toString()}
+        reposts={userInfo.reposts}
       />
       <div className="flex border-b border-muted px-4 pt-2">
         <div className="w-12">
@@ -78,6 +79,7 @@ const ThreadPage = async ({
               likes={thread?.likes}
               replies={thread.children?.length}
               userId={userInfo._id.toString()}
+              reposts={userInfo.reposts}
               comment
             />
           )

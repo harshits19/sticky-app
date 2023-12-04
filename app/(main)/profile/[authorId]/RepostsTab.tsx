@@ -1,12 +1,18 @@
 import PostCard from "@/components/cards/PostCard"
 import { Post, User } from "@/types"
-const ThreadsTab = ({ posts, userInfo }: { posts: any; userInfo: User }) => {
+const RepostsTab = ({
+  reposts,
+  userInfo,
+}: {
+  reposts: any
+  userInfo: User
+}) => {
   return (
     <>
-      {posts.length === 0 ? (
+      {reposts.length === 0 ? (
         <p className="p-4 text-center font-medium">No posts found!</p>
       ) : (
-        posts?.map((thread: Post) => (
+        reposts?.map((thread: Post) => (
           <PostCard
             key={thread._id.toString()}
             text={thread.text}
@@ -25,4 +31,4 @@ const ThreadsTab = ({ posts, userInfo }: { posts: any; userInfo: User }) => {
     </>
   )
 }
-export default ThreadsTab
+export default RepostsTab
