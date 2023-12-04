@@ -51,3 +51,27 @@ type User = {
   username: string
   visibility: string
 }
+
+type ProfileCardProps = {
+  _id: string
+  name: string
+  profilePhoto: string
+  username: string
+  bio: string
+  followers: string[]
+}
+
+type NotificationProps = {
+  _id: mongoose.Schema.Types.ObjectId
+  authorId: string
+  userId: {
+    _id: mongoose.Schema.Types.ObjectId
+    bio: string
+    name: string
+    profilePhoto: string
+    username: string
+  }
+  threadId: string
+  type: string
+  created: Date
+}

@@ -7,8 +7,7 @@ import { ChevronRight } from "lucide-react"
 
 const OnboardPage = async () => {
   const user = await currentUser()
-  if (!user) return null
-  const userInfo = await getUser(user.id)
+  const userInfo = await getUser()
   const userData = {
     id: user?.id ? user?.id : "",
     name: userInfo?.name

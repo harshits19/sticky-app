@@ -3,8 +3,8 @@ import { Post, User } from "@/types"
 const ThreadsTab = ({ posts, userInfo }: { posts: any; userInfo: User }) => {
   return (
     <>
-      {posts.length === 0 ? (
-        <p className="p-4 text-center font-medium">No posts found!</p>
+      {posts?.length === 0 ? (
+        <p className="p-4 text-center font-medium">No posts</p>
       ) : (
         posts?.map((thread: Post) => (
           <PostCard

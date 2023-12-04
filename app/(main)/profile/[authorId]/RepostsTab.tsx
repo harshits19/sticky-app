@@ -10,7 +10,7 @@ const RepostsTab = ({
   return (
     <>
       {reposts.length === 0 ? (
-        <p className="p-4 text-center font-medium">No posts found!</p>
+        <p className="p-4 text-center font-medium">No reposts</p>
       ) : (
         reposts?.map((thread: Post) => (
           <PostCard

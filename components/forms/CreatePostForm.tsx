@@ -10,7 +10,7 @@ import { useProfilePhoto } from "@/hooks/useProfilePhoto"
 import { createThread } from "@/lib/actions/thread.actions"
 import { ImageIcon, Smile } from "lucide-react"
 
-const CreatePostForm = ({ authorId }: { authorId: string }) => {
+const CreatePostForm = ({ userId }: { userId: string }) => {
   const [value, setValue] = useState("")
   const { onOpen, imageStore, clearImgStore } = useProfilePhoto()
   const router = useRouter()
@@ -19,7 +19,7 @@ const CreatePostForm = ({ authorId }: { authorId: string }) => {
     e.preventDefault()
     try {
       await createThread({
-        authorId,
+        userId,
         content: value,
         postImg: imageStore,
         path: "/create-post",

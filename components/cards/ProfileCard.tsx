@@ -1,16 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
 import FollowButton from "@/components/shared/FollowButton"
+import { ProfileCardProps } from "@/types";
 
-type Props = {
-  _id: string
-  name: string
-  profilePhoto: string
-  username: string
-  bio: string
-  followers: string[]
-}
-const ProfileCard = ({ data, userId }: { data: Props; userId: string }) => {
+
+const ProfileCard = ({ data, userId }: { data: ProfileCardProps; userId: string }) => {
   const isFollowing = data?.followers?.find(
     (author: string) => author === userId,
   )

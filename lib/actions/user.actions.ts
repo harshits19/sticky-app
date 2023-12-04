@@ -1,7 +1,9 @@
 "use server"
+import { revalidatePath } from "next/cache"
+import { currentUser } from "@clerk/nextjs/server"
 import { connectToDB } from "@/lib/mongoose"
 import User from "@/lib/models/user.model"
-import { revalidatePath } from "next/cache"
+import { postNotification } from "@/lib/actions/notification.actions"
 
 interface userProps {
   userId: string
@@ -15,6 +17,31 @@ interface userProps {
   userLabel?: string
   visibility?: string
 }
+
+// this fn finds User by clerk userId
+export const getUser = async () => {
+  try {
+    connectToDB()
+    const user = await currentUser()
+    if (!user) throw new Error("User not found in database")
+    const userId = user.id
+    return await User.findOne({ id: userId })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+// this fn finds User by authorId(post author)
+export const getUserByAuthorId = async (authorId: string) => {
+  try {
+    connectToDB()
+    return await User.findOne({ _id: authorId })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+//used in onbaording / edit profile page (userId from clerk id)
 export const updateUser = async ({
   userId,
   name,
@@ -25,13 +52,13 @@ export const updateUser = async ({
   userLabel,
   visibility,
   path,
-}: userProps): Promise<void> => {
+}: userProps) => {
   try {
     connectToDB()
     await User.findOneAndUpdate(
       { id: userId },
       {
-        username: username?.toLowerCase(),
+        username: username?.toLowerCase().trim(),
         onboarded: true,
         name,
         bio,
@@ -47,23 +74,8 @@ export const updateUser = async ({
     throw new Error(`${error}`)
   }
 }
-export const getUser = async (userId: string) => {
-  try {
-    connectToDB()
-    return await User.findOne({ id: userId })
-  } catch (error: any) {
-    throw new Error(`${error}`)
-  }
-}
-export const getUserByAuthorId = async (authorId: string) => {
-  try {
-    connectToDB()
-    return await User.findOne({ _id: authorId })
-  } catch (error: any) {
-    throw new Error(`${error}`)
-  }
-}
-export const followUser = async (
+
+export const followPostAuthor = async (
   authorId: string,
   userId: string,
   pathname: string,
@@ -76,32 +88,40 @@ export const followUser = async (
     await User.findByIdAndUpdate(authorId, {
       $push: { followers: userId },
     })
+
+    postNotification({
+      authorId,
+      userId,
+      type: "follow",
+    })
     revalidatePath(pathname)
   } catch (error: any) {
     throw new Error(`${error}`)
   }
 }
-export const unfollowUser = async (
+
+export const unfollowPostAuthor = async (
   authorId: string,
   userId: string,
   pathname: string,
 ) => {
   try {
     connectToDB()
-    const following = await User.findById(userId)
-    const author = await User.findById(authorId)
-    const newFollowings = following.followings.filter(
+    const postAuthor = await User.findById(authorId)
+    const currentUser = await User.findById(userId)
+    const newFollowings = currentUser.followings.filter(
       (followingId: string) => followingId !== authorId,
     )
     await User.findByIdAndUpdate(userId, {
       followings: newFollowings,
     })
-    const newFollowers = author.followers.filter(
+    const updatedFollowers = postAuthor?.followers?.filter(
       (followerId: string) => followerId !== userId,
     )
     await User.findByIdAndUpdate(authorId, {
-      followers: newFollowers,
+      followers: updatedFollowers,
     })
+
     revalidatePath(pathname)
   } catch (error: any) {
     throw new Error(`${error}`)

@@ -2,23 +2,18 @@ import PostCard from "@/components/cards/PostCard"
 import Navbar from "@/components/shared/Navbar"
 import CreatePost from "@/app/(main)/create-post/page"
 import { getAllPosts } from "@/lib/actions/thread.actions"
-import { currentUser } from "@clerk/nextjs"
 import { getUser } from "@/lib/actions/user.actions"
 
 const HomePage = async () => {
   const { posts } = await getAllPosts()
-  const user = await currentUser()
-  if (!user) return null
-  const userInfo = await getUser(user.id)
+  const userInfo = await getUser()
   return (
     <>
       <Navbar authorId={userInfo._id.toString()} />
       <CreatePost />
       <div>
         {posts?.length === 0 ? (
-          <p className="pt-8 text-center text-xl font-semibold">
-            No Posts Found!
-          </p>
+          <p className="pt-8 text-center text-xl font-semibold">No Posts</p>
         ) : (
           posts?.map((post) => {
             return (

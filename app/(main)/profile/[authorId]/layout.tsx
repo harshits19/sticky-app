@@ -1,7 +1,6 @@
 import Navbar from "@/components/shared/Navbar"
 import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
 import { getUserByAuthorId } from "@/lib/actions/user.actions"
-import mongoose from "mongoose"
 
 const ProfileLayout = async ({
   children,
@@ -11,8 +10,7 @@ const ProfileLayout = async ({
   params: { authorId: string }
 }) => {
   const author = await getUserByAuthorId(authorId)
-  const formatAuthorId = new mongoose.Types.ObjectId(authorId)
-  const { posts } = await getPostsByAuthorId(formatAuthorId)
+  const { posts } = await getPostsByAuthorId(authorId)
   return (
     <>
       <Navbar

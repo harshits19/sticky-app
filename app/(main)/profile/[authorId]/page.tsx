@@ -1,17 +1,15 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
-import { currentUser } from "@clerk/nextjs"
 import { format } from "date-fns"
-import mongoose from "mongoose"
 import MidSection from "@/app/(main)/profile/[authorId]/MidSection"
 import ThreadsTab from "@/app/(main)/profile/[authorId]/ThreadsTab"
 import RepliesTab from "@/app/(main)/profile/[authorId]/RepliesTab"
+import RepostsTab from "@/app/(main)/profile/[authorId]/RepostsTab"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
 import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
 import { Briefcase, CalendarDays, LinkIcon } from "lucide-react"
-import RepostsTab from "./RepostsTab"
 
 type Props = {
   params: {
@@ -27,18 +25,12 @@ export async function generateMetadata({
 
 const ProfilePage = async ({ params: { authorId } }: Props) => {
   const author = await getUserByAuthorId(authorId)
-  const user = await currentUser()
-  if (!user) return null
-  const userInfo = await getUser(user.id)
+  const userInfo = await getUser()
   const userId = userInfo._id.toString()
   const isFollowing = author.followers.find(
     (author: string) => author === userId,
-  )
-    ? true
-    : false
-  const formatAuthorId = new mongoose.Types.ObjectId(authorId)
-  const { posts, replies, reposts } = await getPostsByAuthorId(formatAuthorId)
-
+  ) ? true : false
+  const { posts, replies, reposts } = await getPostsByAuthorId(authorId)
   return (
     <>
       <section className="p-4">

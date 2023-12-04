@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
@@ -126,6 +127,10 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent forceMount align="center">
+          <Link href={`/profile/${userId}`}>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator />
           <SignOutButton signOutCallback={() => router.push("/sign-in")}>
             <DropdownMenuItem className="w-full">Logout</DropdownMenuItem>
           </SignOutButton>

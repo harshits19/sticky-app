@@ -1,19 +1,17 @@
-import { getFollowersByAuthor } from "@/lib/actions/thread.actions"
-import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ProfileCard from "@/components/cards/ProfileCard"
+import { getFollowersByAuthorId } from "@/lib/actions/thread.actions"
+import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
+import { ProfileCardProps } from "@/types"
 
 const FollowersPage = async ({
   params: { authorId, follow },
 }: {
   params: { authorId: string; follow: string }
 }) => {
-  const user = await currentUser()
   const author = await getUserByAuthorId(authorId)
-  if (!user) return null
-  const userInfo = await getUser(user.id) //to match follow button
-  const data = await getFollowersByAuthor({ authorId })
+  const userInfo = await getUser()
+  const data = await getFollowersByAuthorId(authorId)
   return (
     <Tabs defaultValue={follow} className="mt-2 w-full">
       <TabsList>
@@ -29,7 +27,7 @@ const FollowersPage = async ({
             </p>
           </div>
         ) : (
-          data?.followers?.map((follower: any) => (
+          data?.followers?.map((follower: ProfileCardProps) => (
             <ProfileCard
               key={follower?._id}
               data={follower}
@@ -45,7 +43,7 @@ const FollowersPage = async ({
             <p className="">Once they follow accounts, they’ll show up here.</p>
           </div>
         ) : (
-          data?.followings?.map((following: any) => (
+          data?.followings?.map((following: ProfileCardProps) => (
             <ProfileCard
               key={following?._id}
               data={following}

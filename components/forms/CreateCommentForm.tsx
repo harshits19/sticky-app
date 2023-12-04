@@ -11,10 +11,10 @@ import { ImageIcon, Smile } from "lucide-react"
 
 const CreateCommentForm = ({
   parentId,
-  authorId,
+  userId,
 }: {
   parentId: string
-  authorId: string
+  userId: string
 }) => {
   const [value, setValue] = useState("")
   const { onOpen, imageStore, clearImgStore } = useProfilePhoto()
@@ -23,7 +23,7 @@ const CreateCommentForm = ({
     e.preventDefault()
     try {
       await createComment({
-        authorId,
+        userId,
         parentId,
         content: value,
         postImg: imageStore,

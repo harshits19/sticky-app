@@ -1,14 +1,14 @@
-import { getUser } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 import Bottombar from "@/components/shared/Bottombar"
 import LeftSidebar from "@/components/shared/LeftSidebar"
 import RightSidebar from "@/components/shared/RightSidebar"
+import { getUser } from "@/lib/actions/user.actions"
+import { currentUser } from "@clerk/nextjs"
 
 const MainLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await currentUser()
   if (!user) redirect("/sign-in")
-  const userInfo = await getUser(user.id)
+  const userInfo = await getUser()
   if (!userInfo?.onboarded) redirect("/onboarding")
   return (
     <>

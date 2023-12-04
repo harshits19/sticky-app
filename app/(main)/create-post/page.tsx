@@ -1,14 +1,11 @@
 import CreatePostForm from "@/components/forms/CreatePostForm"
 import { getUser } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
 import Image from "next/image"
 import Link from "next/link"
 const CreatePost = async () => {
-  const user = await currentUser()
-  if (!user) return null
-  const userInfo = await getUser(user.id)
+  const userInfo = await getUser()
   return (
-    <div className="flex px-4 pt-4 border-b border-muted">
+    <div className="flex border-b border-muted px-4 pt-4">
       <div className="w-12">
         <Link href={`/profile/${userInfo._id.toString()}`} className="contents">
           <Image
@@ -16,11 +13,11 @@ const CreatePost = async () => {
             height={40}
             width={40}
             alt="profile-image"
-            className="rounded-full h-10 w-10"
+            className="h-10 w-10 rounded-full"
           />
         </Link>
       </div>
-      <CreatePostForm authorId={userInfo._id.toString()} />
+      <CreatePostForm userId={userInfo._id.toString()} />
     </div>
   )
 }

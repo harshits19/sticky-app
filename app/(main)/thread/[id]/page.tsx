@@ -7,7 +7,6 @@ import ThreadCard from "@/components/cards/ThreadCard"
 import CreateCommentForm from "@/components/forms/CreateCommentForm"
 import { getThreadById } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
 import { Post } from "@/types"
 
 export async function generateMetadata({
@@ -29,9 +28,7 @@ const ThreadPage = async ({
   }
 }) => {
   const post = await getThreadById(id)
-  const user = await currentUser()
-  if (!user) return null
-  const userInfo = await getUser(user.id)
+  const userInfo = await getUser()
   return (
     <>
       <Navbar authorId={userInfo._id?.toString()} />
@@ -63,7 +60,7 @@ const ThreadPage = async ({
         </div>
         <CreateCommentForm
           parentId={post._id.toString()}
-          authorId={userInfo._id.toString()}
+          userId={userInfo._id.toString()}
         />
       </div>
       {post?.children &&

@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { followUser, unfollowUser } from "@/lib/actions/user.actions"
+import { followPostAuthor, unfollowPostAuthor } from "@/lib/actions/user.actions"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 
@@ -17,8 +17,8 @@ const FollowButton = ({
 }) => {
   const pathname = usePathname()
   const handleAction = async () => {
-    if (status) unfollowUser(authorId, userId, pathname)
-    else followUser(authorId, userId, pathname)
+    if (status) unfollowPostAuthor(authorId, userId, pathname)
+    else followPostAuthor(authorId, userId, pathname)
   }
   return (
     <Button

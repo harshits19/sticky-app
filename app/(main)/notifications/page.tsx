@@ -1,10 +1,23 @@
-import { getAllActivities } from "@/lib/actions/activity.actions"
-import { getUser } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
+import Navbar from "@/components/shared/Navbar"
+import NotificationCard from "@/components/cards/NotificationCard"
+import { getAllNotifications } from "@/lib/actions/notification.actions"
 
 const NotificationPage = async () => {
-  const replies = await getAllActivities()
-  // console.log(replies)
-  return <div>NotificationPage</div>
+  const notifications = await getAllNotifications()
+  return (
+    <div>
+      <Navbar />
+      <div className="flex flex-col">
+        {notifications?.map((notification, idx) => {
+          return (
+            <NotificationCard
+              notification={notification}
+              key={notification._id.toString()}
+            />
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 export default NotificationPage

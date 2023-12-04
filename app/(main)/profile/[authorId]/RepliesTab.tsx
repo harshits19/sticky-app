@@ -16,10 +16,10 @@ const RepliesTab = ({
 }) => {
   return (
     <>
-      {replies.length === 0 ? (
-        <p className="p-4 text-center font-medium">No replies found!</p>
+      {replies?.length === 0 ? (
+        <p className="p-4 text-center font-medium">No replies</p>
       ) : (
-        replies.map((thread: any) => (
+        replies?.map((thread: any) => (
           <div key={thread.parentId._id.toString()}>
             <article className="flex px-4 pb-2 pt-4 transition-colors duration-200 hover:bg-muted">
               <div className="flex w-14 flex-col">
@@ -91,6 +91,7 @@ const RepliesTab = ({
               </div>
             </article>
             <PostCard
+              key={thread._id.toString()}
               text={thread.text}
               _id={thread._id.toString()}
               created={thread.created}

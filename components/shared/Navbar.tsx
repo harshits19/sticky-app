@@ -24,7 +24,7 @@ const Navbar = ({
   authorName,
   username,
 }: {
-  authorId: string
+  authorId?: string
   postsNum?: number
   authorName?: string
   username?: string
@@ -48,6 +48,9 @@ const Navbar = ({
           )}
           {pathname.startsWith(`/thread/`) && (
             <span className="pl-4 text-lg font-semibold">Post</span>
+          )}
+          {pathname === "/notifications" && (
+            <span className="pl-4 text-lg font-semibold">Notifications</span>
           )}
           {pathname.startsWith(`/profile/`) && (
             <div className="flex flex-col justify-center pl-4">

@@ -1,38 +1,20 @@
 "use server"
-import { connectToDB } from "@/lib/mongoose"
-import Thread from "../models/thread.model"
-import User from "../models/user.model"
 import { revalidatePath } from "next/cache"
+import mongoose from "mongoose"
+import { postNotification } from "@/lib/actions/notification.actions"
+import { connectToDB } from "@/lib/mongoose"
+import Thread from "@/lib/models/thread.model"
+import User from "@/lib/models/user.model"
 
 interface threadProps {
-  authorId: string
-  content: string
+  userId: string
+  parentId?: string
+  authorId?: string
+  content?: string
   postImg?: string[]
   path: string
-  parentId?: string
 }
-export const createThread = async ({
-  authorId,
-  content,
-  postImg,
-  path,
-}: threadProps): Promise<void> => {
-  try {
-    connectToDB()
-    const createdThread = await Thread.create({
-      authorId,
-      text: content,
-      postImages: postImg,
-      parentId: null,
-    })
-    await User.findByIdAndUpdate(authorId, {
-      $push: { userPosts: createdThread._id },
-    })
-    revalidatePath(path)
-  } catch (error: any) {
-    throw new Error(`${error}`)
-  }
-}
+
 export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
   try {
     connectToDB()
@@ -48,11 +30,7 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
       })
       .populate({
         path: "children",
-        populate: {
-          path: "authorId",
-          model: User,
-          select: "_id name username parentId profilePhoto",
-        },
+        select: "_id",
       })
 
     const totalPostsCount = await Thread.countDocuments({
@@ -67,11 +45,15 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
     throw new Error(`${error}`)
   }
 }
-export const getPostsByAuthorId = async (authorId: any) => {
+
+//search posts by their post authorId, used in author profile page
+export const getPostsByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
+    const formatAuthorId = new mongoose.Types.ObjectId(authorId)
+    //select those posts(that belongs to author) that have no parent
     const posts = await Thread.find({
-      authorId,
+      authorId: formatAuthorId,
       parentId: { $in: [null, undefined] },
     })
       .sort({ created: "desc" })
@@ -83,9 +65,12 @@ export const getPostsByAuthorId = async (authorId: any) => {
       .populate({
         path: "children",
         model: Thread,
+        select: "_id",
       })
+
+    //select reply(belongs to author) and its parent-post(can be of diffrent author)
     const replies = await Thread.find({
-      authorId,
+      authorId: formatAuthorId,
       parentId: { $exists: true, $ne: null },
     })
       .sort({ created: "desc" })
@@ -107,11 +92,12 @@ export const getPostsByAuthorId = async (authorId: any) => {
         path: "children",
         model: Thread,
       })
-    const reposts = await User.findOne({
+
+    //Finding reposts of specific User(in this case - post author)
+    const reposts = await User.findById({
       _id: authorId,
     })
       .select("reposts")
-      .sort({ created: "desc" })
       .populate({
         path: "reposts",
         model: Thread,
@@ -127,6 +113,7 @@ export const getPostsByAuthorId = async (authorId: any) => {
   }
 }
 
+//used in thread page, to get post and all its replies (thread in combination) , here threadId = postId
 export const getThreadById = async (threadId: string) => {
   try {
     connectToDB()
@@ -142,7 +129,7 @@ export const getThreadById = async (threadId: string) => {
           {
             path: "authorId",
             model: User,
-            select: "_id id name username parentId profilePhoto",
+            select: "_id id name username profilePhoto",
           },
           {
             path: "children",
@@ -150,7 +137,7 @@ export const getThreadById = async (threadId: string) => {
             populate: {
               path: "authorId",
               model: User,
-              select: "_id id name username parentId profilePhoto",
+              select: "_id id name username profilePhoto",
             },
           },
         ],
@@ -159,8 +146,52 @@ export const getThreadById = async (threadId: string) => {
     throw new Error(`${error}`)
   }
 }
+
+export const getFollowersByAuthorId = async (authorId: string) => {
+  try {
+    connectToDB()
+    return await User.findOne({ _id: authorId })
+      .populate({
+        path: "followers",
+        model: User,
+        select: "_id name username profilePhoto bio followers",
+      })
+      .populate({
+        path: "followings",
+        model: User,
+        select: "_id name username profilePhoto bio followers",
+      })
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+//the userId(user who create post) becomes authorId of that post
+export const createThread = async ({
+  userId,
+  content,
+  postImg,
+  path,
+}: threadProps) => {
+  try {
+    connectToDB()
+    const createdThread = await Thread.create({
+      authorId: userId,
+      text: content,
+      postImages: postImg,
+      parentId: null,
+    })
+    await User.findByIdAndUpdate(userId, {
+      $push: { userPosts: createdThread._id },
+    })
+    revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
 export const createComment = async ({
-  authorId,
+  userId,
   parentId,
   content,
   postImg,
@@ -169,7 +200,7 @@ export const createComment = async ({
   try {
     connectToDB()
     const createdComment = await Thread.create({
-      authorId,
+      authorId: userId,
       parentId,
       text: content,
       postImages: postImg,
@@ -178,6 +209,15 @@ export const createComment = async ({
     await Thread.findByIdAndUpdate(parentId, {
       $push: { children: createdComment._id },
     })
+    const userInfo = await Thread.findById(parentId).select("authorId")
+    if (userInfo.authorId.toString() !== userId)
+      postNotification({
+        authorId: userInfo.authorId.toString(),
+        userId,
+        threadId: parentId,
+        type: "reply",
+      })
+
     revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
@@ -198,6 +238,14 @@ export const likePost = async ({
     await Thread.findByIdAndUpdate(threadId, {
       $push: { likes: userId },
     })
+    const userInfo = await Thread.findById(threadId).select("authorId")
+    if (userInfo.authorId.toString() !== userId)
+      postNotification({
+        authorId: userInfo.authorId.toString(),
+        userId,
+        threadId,
+        type: "like",
+      })
     revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
@@ -228,29 +276,6 @@ export const dislikePost = async ({
   }
 }
 
-export const getFollowersByAuthor = async ({
-  authorId,
-}: {
-  authorId: string
-}) => {
-  try {
-    connectToDB()
-    return await User.findOne({ _id: authorId })
-      .populate({
-        path: "followers",
-        model: User,
-        select: "_id name username profilePhoto bio followers",
-      })
-      .populate({
-        path: "followings",
-        model: User,
-        select: "_id name username profilePhoto bio followers",
-      })
-  } catch (error: any) {
-    throw new Error(`${error}`)
-  }
-}
-
 export const repost = async ({
   userId,
   threadId,
@@ -262,17 +287,23 @@ export const repost = async ({
 }) => {
   try {
     connectToDB()
-    await User.findByIdAndUpdate(
-      { _id: userId },
-      {
-        $push: { reposts: threadId },
-      },
-    )
+    await User.findByIdAndUpdate(userId, {
+      $push: { reposts: threadId },
+    })
+    const userInfo = await Thread.findById(threadId).select("authorId")
+    if (userInfo.authorId.toString() !== userId)
+      postNotification({
+        authorId: userInfo.authorId.toString(),
+        userId,
+        threadId,
+        type: "repost",
+      })
     revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
   }
 }
+
 export const unrepost = async ({
   userId,
   threadId,
@@ -289,12 +320,9 @@ export const unrepost = async ({
     const updatedReposts = user.reposts.filter(
       (thread: string) => thread !== threadId,
     )
-    await User.findByIdAndUpdate(
-      { _id: userId },
-      {
-        reposts: updatedReposts,
-      },
-    )
+    await User.findByIdAndUpdate(userId, {
+      reposts: updatedReposts,
+    })
     revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
