@@ -22,7 +22,7 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
   const pathname = usePathname()
   const router = useRouter()
   return (
-    <section className="sticky top-0 hidden h-screen lg:flex-1 lg:w-full lg:max-w-xs flex-col justify-between border-r-[1px] border-muted bg-background px-1 pb-8 pt-2 sm:flex lg:pl-4">
+    <section className="sticky top-0 hidden h-screen flex-col justify-between border-r-[1px] border-muted bg-background px-1 pb-8 pt-2 sm:flex lg:w-full lg:max-w-xs lg:flex-1 lg:pl-4">
       <div className="flex flex-col items-center lg:items-start">
         <div className="mb-4 flex items-center gap-1 px-4">
           <Link href="/" className="contents">
@@ -106,7 +106,7 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
         <DropdownMenuTrigger asChild>
           <div
             role="button"
-            className="flex w-full items-center justify-center rounded-full px-3 py-3 hover:bg-muted lg:px-6 max-w-[264px]">
+            className="flex w-full max-w-[264px] items-center justify-center rounded-full px-3 py-3 hover:bg-muted lg:px-6">
             <div className="h-10 w-12 lg:w-16">
               <Image
                 src={imageURL}
@@ -126,11 +126,9 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent forceMount align="center">
-          <DropdownMenuItem className="w-full">
-            <SignOutButton signOutCallback={() => router.push("/sign-in")}>
-              Logout
-            </SignOutButton>
-          </DropdownMenuItem>
+          <SignOutButton signOutCallback={() => router.push("/sign-in")}>
+            <DropdownMenuItem className="w-full">Logout</DropdownMenuItem>
+          </SignOutButton>
         </DropdownMenuContent>
       </DropdownMenu>
     </section>

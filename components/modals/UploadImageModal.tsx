@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
-import { SingleImageDropzone } from "@/components/SingleImageDropzone"
+import { SingleImageDropzone } from "@/components/shared/SingleImageDropzone"
 import { useProfilePhoto } from "@/hooks/useProfilePhoto"
 import { useEdgeStore } from "@/lib/edgestore"
 import { updateUser } from "@/lib/actions/user.actions"
@@ -40,7 +40,8 @@ const UploadImageModal = ({
         },
       })
       addImg(res.url)
-      userId && profilePic &&
+      userId &&
+        profilePic &&
         (await updateUser({
           userId: userId,
           path: "/profile/edit",

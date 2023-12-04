@@ -13,8 +13,8 @@ const OnboardPage = async () => {
     id: user?.id ? user?.id : "",
     name: userInfo?.name
       ? userInfo?.name
-      : user?.firstName
-      ? user?.firstName
+      : user?.firstName && user?.lastName
+      ? `${user?.firstName} ${user?.lastName}`
       : "",
     username: userInfo?.username ? userInfo?.username : "",
     profilePhoto: userInfo?.profilePhoto
@@ -25,7 +25,7 @@ const OnboardPage = async () => {
     bio: userInfo?.bio ? userInfo?.bio : "",
     link: userInfo?.link ? userInfo?.link : "",
     userLabel: userInfo?.userLabel ? userInfo?.userLabel : "",
-    visibility: userInfo?.visibility ? userInfo?.visibility : true,
+    visibility: userInfo?.visibility ? userInfo?.visibility : "true",
   }
 
   return (

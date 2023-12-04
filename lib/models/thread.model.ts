@@ -9,12 +9,8 @@ const threadSchema = new mongoose.Schema({
   text: { type: String, required: true },
   postImages: { type: [String] },
   created: { type: Date, default: Date.now },
-  updated: { type: Date, default: Date.now },
   parentId: { type: String },
-  likes: {
-    type: [String],
-    ref: "User",
-  },
+  likes: [{ type: String, ref: "User" }],
   children: [
     {
       type: mongoose.Schema.Types.ObjectId,

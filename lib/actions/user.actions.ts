@@ -14,7 +14,7 @@ interface userProps {
   link?: string
   onboarded?: string
   userLabel?: string
-  visibility?: boolean
+  visibility?: string
 }
 export const updateUser = async ({
   userId,

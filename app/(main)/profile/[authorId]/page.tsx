@@ -1,16 +1,16 @@
-import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
-import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
-import { currentUser } from "@clerk/nextjs"
-import { format } from "date-fns"
-import { Briefcase, CalendarDays, LinkIcon } from "lucide-react"
-import mongoose from "mongoose"
-import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
+import { currentUser } from "@clerk/nextjs"
+import { format } from "date-fns"
+import mongoose from "mongoose"
+import MidSection from "@/app/(main)/profile/[authorId]/MidSection"
+import ThreadsTab from "@/app/(main)/profile/[authorId]/ThreadsTab"
+import RepliesTab from "@/app/(main)/profile/[authorId]/RepliesTab"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import MidSection from "./MidSection"
-import ThreadsTab from "./ThreadsTab"
-import RepliesTab from "./RepliesTab"
+import { getPostsByAuthorId } from "@/lib/actions/thread.actions"
+import { getUser, getUserByAuthorId } from "@/lib/actions/user.actions"
+import { Briefcase, CalendarDays, LinkIcon } from "lucide-react"
 
 type Props = {
   params: {
@@ -74,18 +74,23 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
             }`}
           </Link>
         </div>
-        <div className="flex gap-x-4 py-2">
+        <div className="flex flex-wrap gap-x-4 py-2">
           {author?.userLabel && (
             <span className="flex items-center text-sm">
               <Briefcase className="h-4 w-4 pr-1" />
-
               {author?.userLabel}
             </span>
           )}
           {author?.link && (
-            <span className="flex items-center text-sm">
+            <span className="flex max-w-[14rem] items-center truncate text-sm">
               <LinkIcon className="h-4 w-4 pr-1" />
-              {author?.link}
+              <Link
+                href={author.link}
+                target="_blank"
+                rel="nofollow"
+                className="contents text-blue-400">
+                {author?.link}
+              </Link>
             </span>
           )}
           <span

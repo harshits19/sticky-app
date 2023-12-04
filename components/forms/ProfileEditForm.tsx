@@ -36,9 +36,9 @@ type FormValues = {
   username: string
   profilePhoto: string
   bio: string
+  visibility?: string
   link?: string
   userLabel?: string
-  visibility?: boolean
 }
 
 const ProfileEditForm = ({
@@ -187,21 +187,26 @@ const ProfileEditForm = ({
                 <FormLabel>Category</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  >
+                  defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Science & Technology">Science & Technology</SelectItem>
+                    <SelectItem value="Science & Technology">
+                      Science & Technology
+                    </SelectItem>
                     <SelectItem value="Artist">Artist</SelectItem>
-                    <SelectItem value="Financial Services">Financial Services</SelectItem>
+                    <SelectItem value="Financial Services">
+                      Financial Services
+                    </SelectItem>
                     <SelectItem value="Influencer">Influencer</SelectItem>
                     <SelectItem value="Journalist">Journalist</SelectItem>
                     <SelectItem value="Entrepreneur">Entrepreneur</SelectItem>
-                    <SelectItem value="Media Personality">Media Personality</SelectItem>
+                    <SelectItem value="Media Personality">
+                      Media Personality
+                    </SelectItem>
                     <SelectItem value="Education">Education</SelectItem>
                     <SelectItem value="Aviation">Aviation</SelectItem>
                     <SelectItem value="Entertainment">Entertainment</SelectItem>
@@ -226,13 +231,13 @@ const ProfileEditForm = ({
                     className="flex space-x-1 pt-1">
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={true} />
+                        <RadioGroupItem value="true" />
                       </FormControl>
                       <FormLabel className="font-normal">Public</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={false} />
+                        <RadioGroupItem value="false" />
                       </FormControl>
                       <FormLabel className="font-normal">Private</FormLabel>
                     </FormItem>

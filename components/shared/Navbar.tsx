@@ -1,8 +1,8 @@
 "use client"
-import { SignOutButton } from "@clerk/nextjs"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
+import { SignOutButton } from "@clerk/nextjs"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +15,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ArrowLeft, MoreHorizontal } from "lucide-react"
 import { formatNum } from "@/hooks/useFormatNum"
+import { ArrowLeft, MoreHorizontal } from "lucide-react"
 
 const Navbar = ({
   authorId,
@@ -52,7 +52,8 @@ const Navbar = ({
           {pathname.startsWith(`/profile/`) && (
             <div className="flex flex-col justify-center pl-4">
               <span className="text-lg font-bold leading-5">{authorName}</span>
-              {pathname.startsWith(`/profile/${authorId}/follow`) || pathname.startsWith(`/profile/edit`) ? (
+              {pathname.startsWith(`/profile/${authorId}/follow`) ||
+              pathname.startsWith(`/profile/edit`) ? (
                 <span className="text-xs leading-4 text-muted-foreground/60">
                   {"@" + username}
                 </span>
@@ -71,14 +72,12 @@ const Navbar = ({
           <DropdownMenuContent forceMount align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/profile/${authorId}`}>Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <SignOutButton signOutCallback={() => router.push("/sign-in")}>
-                Logout
-              </SignOutButton>
-            </DropdownMenuItem>
+            <Link href={`/profile/${authorId}`}>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+            </Link>
+            <SignOutButton signOutCallback={() => router.push("/sign-in")}>
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </SignOutButton>
             <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Appearance</DropdownMenuSubTrigger>
