@@ -39,7 +39,7 @@ const PostCard = ({
         <div className="flex justify-between">
           <div className="flex items-start gap-x-1">
             <Link
-              href={`/profile/${authorId?._id.toString()}`}
+              href={`/profile/${authorId?._id?.toString()}`}
               scroll={false}
               className="contents">
               <span className="text-sm font-bold hover:underline">

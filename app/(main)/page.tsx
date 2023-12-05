@@ -15,7 +15,7 @@ const HomePage = async () => {
         {posts?.length === 0 ? (
           <p className="pt-8 text-center text-xl font-semibold">No Posts</p>
         ) : (
-          posts?.map((post) => {
+          posts?.map((post: any) => {
             return (
               <PostCard
                 key={post.authorId}

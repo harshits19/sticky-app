@@ -36,7 +36,7 @@ const EditPage = async () => {
         username={userInfo?.username}
       />
       <div className="p-4">
-        <h2 className="text-xl font-bold">Edit Profile</h2>
+        <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
         <div className="flex justify-center">
           <ProfileEditForm user={userData} btnTitle="Update" editForm />
         </div>

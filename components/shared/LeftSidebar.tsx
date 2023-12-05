@@ -1,6 +1,8 @@
 "use client"
+import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
-import { HomeIcon, SearchIcon, CreateIcon, HeartIcon, UserIcon } from "./Icons"
+import { SignOutButton } from "@clerk/nextjs"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,18 +10,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import Image from "next/image"
-import Link from "next/link"
-import { MoreHorizontal } from "lucide-react"
-import { SignOutButton } from "@clerk/nextjs"
+import { markReadNotification } from "@/lib/actions/notification.actions"
+import { HomeIcon, SearchIcon, CreateIcon, HeartIcon, UserIcon } from "./Icons"
+import { Circle, MoreHorizontal } from "lucide-react"
 
 interface SidebarProps {
   userId: string
   username: string
   name: string
   imageURL: string
+  notificationStatus: boolean
 }
-const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
+const LeftSidebar = ({
+  userId,
+  username,
+  name,
+  imageURL,
+  notificationStatus,
+}: SidebarProps) => {
   const pathname = usePathname()
   const router = useRouter()
   return (
@@ -69,14 +77,25 @@ const LeftSidebar = ({ userId, username, name, imageURL }: SidebarProps) => {
           </div>
         </Link>
         <Link href="/notifications" className="contents">
-          <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <HeartIcon
-              className={`${
-                pathname === "/notifications"
-                  ? "fill-current"
-                  : "fill-transparent"
-              }`}
-            />
+          <div
+            className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6"
+            onClick={() => {
+              if (notificationStatus === true) markReadNotification(userId)
+            }}>
+            <div className="relative">
+              <HeartIcon
+                className={`${
+                  pathname === "/notifications"
+                    ? "fill-current"
+                    : "fill-transparent"
+                }`}
+              />
+              {notificationStatus === true && (
+                <span className="absolute -right-2 -top-2">
+                  <Circle className="h-2 w-2 fill-blue-500 stroke-blue-500" />
+                </span>
+              )}
+            </div>
             <span
               className={`hidden text-lg text-primary lg:flex ${
                 pathname === "/notifications" && "font-bold"

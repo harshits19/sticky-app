@@ -6,7 +6,7 @@ const NotificationPage = async () => {
   const notifications = await getAllNotifications()
   return (
     <div>
-      <Navbar />
+      <Navbar navTitle="Notifications" />
       <div className="flex flex-col">
         {notifications?.map((notification, idx) => {
           return (

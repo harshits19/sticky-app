@@ -31,7 +31,7 @@ const ThreadPage = async ({
   const userInfo = await getUser()
   return (
     <>
-      <Navbar authorId={userInfo._id?.toString()} />
+      <Navbar navTitle="Post" />
       <ThreadCard
         key={post.authorId}
         text={post.text}

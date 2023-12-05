@@ -16,20 +16,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { formatNum } from "@/hooks/useFormatNum"
-import { ArrowLeft, MoreHorizontal } from "lucide-react"
+import { ArrowLeft, CheckIcon, MoreHorizontal } from "lucide-react"
 
 const Navbar = ({
   authorId,
   postsNum = 0,
   authorName,
   username,
+  navTitle,
 }: {
   authorId?: string
   postsNum?: number
   authorName?: string
   username?: string
+  navTitle?: string
 }) => {
-  const { setTheme } = useTheme()
+  const { setTheme, theme } = useTheme()
   const pathname = usePathname()
   const router = useRouter()
   return (
@@ -46,22 +48,19 @@ const Navbar = ({
           ) : (
             <p></p>
           )}
-          {pathname.startsWith(`/thread/`) && (
-            <span className="pl-4 text-lg font-semibold">Post</span>
-          )}
-          {pathname === "/notifications" && (
-            <span className="pl-4 text-lg font-semibold">Notifications</span>
+          {navTitle && (
+            <span className="pl-4 text-lg font-semibold">{navTitle}</span>
           )}
           {pathname.startsWith(`/profile/`) && (
             <div className="flex flex-col justify-center pl-4">
               <span className="text-lg font-bold leading-5">{authorName}</span>
               {pathname.startsWith(`/profile/${authorId}/follow`) ||
               pathname.startsWith(`/profile/edit`) ? (
-                <span className="text-xs leading-4 text-muted-foreground/60">
+                <span className="text-xs leading-4 text-muted-foreground">
                   {"@" + username}
                 </span>
               ) : (
-                <span className="text-xs leading-4 text-muted-foreground/60">{`${formatNum(
+                <span className="text-xs leading-4 text-muted-foreground">{`${formatNum(
                   postsNum,
                 )} ${postsNum > 1 ? "Posts" : "Post"}`}</span>
               )}
@@ -86,13 +85,34 @@ const Navbar = ({
               <DropdownMenuSubTrigger>Appearance</DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent forceMount>
-                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                  <DropdownMenuItem
+                    onClick={() => setTheme("light")}
+                    className="flex items-center gap-x-1">
+                    {theme === "light" ? (
+                      <CheckIcon className="h-4 w-4" />
+                    ) : (
+                      <span className="h-4 w-4" />
+                    )}
                     Light
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  <DropdownMenuItem
+                    onClick={() => setTheme("dark")}
+                    className="flex items-center gap-x-1">
+                    {theme === "dark" ? (
+                      <CheckIcon className="h-4 w-4" />
+                    ) : (
+                      <span className="h-4 w-4" />
+                    )}
                     Dark
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                  <DropdownMenuItem
+                    onClick={() => setTheme("system")}
+                    className="flex items-center gap-x-1">
+                    {theme === "system" ? (
+                      <CheckIcon className="h-4 w-4" />
+                    ) : (
+                      <span className="h-4 w-4" />
+                    )}
                     System
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>

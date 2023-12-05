@@ -1,6 +1,11 @@
+import Navbar from "@/components/shared/Navbar"
+
 const page = () => {
   return (
-    <div>page</div>
+    <>
+      <Navbar navTitle="Search" />
+      <div>page</div>
+    </>
   )
 }
 export default page

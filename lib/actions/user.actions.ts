@@ -75,6 +75,15 @@ export const updateUser = async ({
   }
 }
 
+export const getUserNotification = async (userId: string) => {
+  try {
+    connectToDB()
+    return await User.findById(userId).select("hasNotification")
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
 export const followPostAuthor = async (
   authorId: string,
   userId: string,

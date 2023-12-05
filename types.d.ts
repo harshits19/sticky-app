@@ -35,6 +35,25 @@ type Post = {
   likes: string[]
 }
 
+type NewPost = {
+  key?: string
+  _id: mongoose.Schema.Types.ObjectId
+  authorId: {
+    _id: mongoose.Schema.Types.ObjectId
+    name: string
+    username: string
+    profilePhoto: string
+  }
+  text: string
+  postImages: string[]
+  parentId: string | null
+  children: {
+    _id: mongoose.Schema.Types.ObjectId
+  }[]
+  created: Date
+  likes: string[]
+}
+
 type User = {
   _id: string
   bio: string
@@ -71,7 +90,10 @@ type NotificationProps = {
     profilePhoto: string
     username: string
   }
-  threadId: string
+  threadId: {
+    _id: mongoose.Schema.Types.ObjectId
+    text: string
+  }
   type: string
   created: Date
 }
