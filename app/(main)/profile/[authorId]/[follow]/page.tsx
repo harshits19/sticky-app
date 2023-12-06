@@ -21,8 +21,8 @@ const FollowersPage = async ({
       <TabsContent value="followers">
         {data?.followers?.length === 0 ? (
           <div className="px-4 pt-6 text-center">
-            <p className="text-2xl font-bold">{`Looking for followers?`}</p>
-            <p className="">
+            <p className="text-xl font-bold">{`Looking for followers?`}</p>
+            <p className="text-sm">
               When someone follows this account, they’ll show up here.
             </p>
           </div>
@@ -31,7 +31,7 @@ const FollowersPage = async ({
             <ProfileCard
               key={follower?._id}
               data={follower}
-              userId={userInfo._id.toString()}
+              userId={userInfo._id}
             />
           ))
         )}
@@ -39,15 +39,17 @@ const FollowersPage = async ({
       <TabsContent value="following">
         {data?.followings?.length === 0 ? (
           <div className="px-4 pt-6 text-center">
-            <p className="text-2xl font-bold">{`@${author.username} isn’t following anyone`}</p>
-            <p className="">Once they follow accounts, they’ll show up here.</p>
+            <p className="text-xl font-bold">{`@${author.username} isn’t following anyone`}</p>
+            <p className="text-sm">
+              Once they follow accounts, they’ll show up here.
+            </p>
           </div>
         ) : (
           data?.followings?.map((following: ProfileCardProps) => (
             <ProfileCard
               key={following?._id}
               data={following}
-              userId={userInfo._id.toString()}
+              userId={userInfo._id}
             />
           ))
         )}

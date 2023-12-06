@@ -37,9 +37,9 @@ const PostCard = ({
       </div>
       <div className="w-full">
         <div className="flex justify-between">
-          <div className="flex items-start gap-x-1">
+          <div className="flex items-start gap-x-1 flex-wrap">
             <Link
-              href={`/profile/${authorId?._id?.toString()}`}
+              href={`/profile/${authorId?._id}`}
               scroll={false}
               className="contents">
               <span className="text-sm font-bold hover:underline">
@@ -51,7 +51,7 @@ const PostCard = ({
             </Link>
             <p
               className="text-sm text-muted-foreground/75"
-              title={format(created, "dd MMM yyyy hh:mm")}>
+              title={format(new Date(created), "dd MMM yyyy hh:mm")}>
               {calculateTimeDifference(created)}
             </p>
           </div>

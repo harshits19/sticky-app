@@ -41,14 +41,12 @@ const ThreadPage = async ({
         authorId={post.authorId}
         likes={post.likes}
         replies={post.children?.length}
-        userId={userInfo._id.toString()}
+        userId={userInfo._id}
         reposts={userInfo.reposts}
       />
       <div className="flex border-b border-muted px-4 pt-2">
         <div className="w-12">
-          <Link
-            href={`/profile/${userInfo._id.toString()}`}
-            className="contents">
+          <Link href={`/profile/${userInfo._id}`} className="contents">
             <Image
               src={userInfo?.profilePhoto}
               height={40}
@@ -58,24 +56,21 @@ const ThreadPage = async ({
             />
           </Link>
         </div>
-        <CreateCommentForm
-          parentId={post._id.toString()}
-          userId={userInfo._id.toString()}
-        />
+        <CreateCommentForm parentId={post._id} userId={userInfo._id} />
       </div>
       {post?.children &&
         post?.children?.map((thread: Post) => {
           return (
             <PostCard
-              key={thread._id.toString()}
+              key={thread._id}
               text={thread.text}
-              _id={thread._id.toString()}
+              _id={thread._id}
               created={thread.created}
               postImages={thread.postImages}
               authorId={thread.authorId}
               likes={thread?.likes}
               replies={thread.children?.length}
-              userId={userInfo._id.toString()}
+              userId={userInfo._id}
               reposts={userInfo.reposts}
               comment
             />

@@ -12,14 +12,14 @@ import { calculateTimeDifference } from "@/hooks/useDateDistance"
 const NotificationCard = ({
   notification,
 }: {
-  notification: Partial<NotificationProps>
+  notification: NotificationProps
 }) => {
   return (
     <Link
       href={
         notification.type === "follow"
-          ? `/profile/${notification.userId?._id.toString()}`
-          : `/thread/${notification.threadId?._id.toString()}`
+          ? `/profile/${notification.userId._id}`
+          : `/thread/${notification.threadId._id}`
       }
       className="contents">
       <div className="flex w-full border-b border-muted px-4 py-2 text-sm hover:bg-muted sm:px-6 sm:py-4">
@@ -65,11 +65,9 @@ const NotificationCard = ({
             </div>
           </div>
         </div>
-        {notification?.created && (
-          <div className="pl-2 text-sm text-muted-foreground">
-            {calculateTimeDifference(notification?.created)}
-          </div>
-        )}
+        <div className="pl-2 text-sm text-muted-foreground">
+          {calculateTimeDifference(notification?.created)}
+        </div>
       </div>
     </Link>
   )

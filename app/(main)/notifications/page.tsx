@@ -1,6 +1,7 @@
 import Navbar from "@/components/shared/Navbar"
 import NotificationCard from "@/components/cards/NotificationCard"
 import { getAllNotifications } from "@/lib/actions/notification.actions"
+import { NotificationProps } from "@/types"
 
 const NotificationPage = async () => {
   const notifications = await getAllNotifications()
@@ -8,11 +9,11 @@ const NotificationPage = async () => {
     <div>
       <Navbar navTitle="Notifications" />
       <div className="flex flex-col">
-        {notifications?.map((notification, idx) => {
+        {notifications?.map((notification: NotificationProps) => {
           return (
             <NotificationCard
               notification={notification}
-              key={notification._id.toString()}
+              key={notification._id}
             />
           )
         })}

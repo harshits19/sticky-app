@@ -29,16 +29,28 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
   const userId = userInfo._id.toString()
   const isFollowing = author.followers.find(
     (author: string) => author === userId,
-  ) ? true : false
+  )
+    ? true
+    : false
+  const isFollowed = author.followings.find(
+    (author: string) => author === userId,
+  )
+    ? true
+    : false
   const { posts, replies, reposts } = await getPostsByAuthorId(authorId)
   return (
-    <>
-      <section className="p-4">
+    <section>
+      <div className="p-4">
         <div className="flex justify-between">
           <div className="w-full">
             <h4 className="text-xl font-bold leading-6">{author.name}</h4>
-            <h4 className="text-base leading-5 text-muted-foreground">
-              {"@" + author.username}
+            <h4 className="flex items-center text-base leading-5 text-muted-foreground">
+              {"@" + author.username}{" "}
+              {isFollowed && (
+                <span className="ml-1 rounded bg-muted p-0.5 text-xs text-primary/90">
+                  Follows you
+                </span>
+              )}
             </h4>
             <p className="pt-2 text-sm">{author.bio}</p>
           </div>
@@ -49,7 +61,7 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
               height={96}
               width={96}
               quality={100}
-              className="h-24 w-24 rounded-full"
+              className="h-20 w-20 rounded-full sm:h-24 sm:w-24"
             />
           </div>
         </div>
@@ -88,39 +100,30 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
           )}
           <span
             className="flex items-center text-sm"
-            title={`${format(author.created, "dd MMM yyyy, hh:mm")}`}>
+            title={`${format(new Date(author.created), "dd MMM yyyy, hh:mm")}`}>
             <CalendarDays className="h-4 w-4 pr-1" />
-            {`Joined ${format(author.created, "MMM yyyy")}`}
+            {`Joined ${format(new Date(author.created), "MMM yyyy")}`}
           </span>
         </div>
         <MidSection userId={userId} authorId={authorId} status={isFollowing} />
-        <Tabs defaultValue="posts" className="mt-4 w-full">
-          <TabsList>
-            <TabsTrigger value="posts">Posts</TabsTrigger>
-            <TabsTrigger value="replies">Replies</TabsTrigger>
-            <TabsTrigger value="reposts">Reposts</TabsTrigger>
-          </TabsList>
-          <TabsContent value="posts">
-            <ThreadsTab
-              posts={posts}
-              userInfo={JSON.parse(JSON.stringify(userInfo))}
-            />
-          </TabsContent>
-          <TabsContent value="replies">
-            <RepliesTab
-              replies={replies}
-              userInfo={JSON.parse(JSON.stringify(userInfo))}
-            />
-          </TabsContent>
-          <TabsContent value="reposts">
-            <RepostsTab
-              reposts={reposts.reposts}
-              userInfo={JSON.parse(JSON.stringify(userInfo))}
-            />
-          </TabsContent>
-        </Tabs>
-      </section>
-    </>
+      </div>
+      <Tabs defaultValue="posts" className="w-full p-0 sm:p-4">
+        <TabsList>
+          <TabsTrigger value="posts">Posts</TabsTrigger>
+          <TabsTrigger value="replies">Replies</TabsTrigger>
+          <TabsTrigger value="reposts">Reposts</TabsTrigger>
+        </TabsList>
+        <TabsContent value="posts">
+          <ThreadsTab posts={posts} userInfo={userInfo} />
+        </TabsContent>
+        <TabsContent value="replies">
+          <RepliesTab replies={replies} userInfo={userInfo} />
+        </TabsContent>
+        <TabsContent value="reposts">
+          <RepostsTab reposts={reposts.reposts} userInfo={userInfo} />
+        </TabsContent>
+      </Tabs>
+    </section>
   )
 }
 export default ProfilePage

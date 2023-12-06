@@ -17,10 +17,13 @@ const RepliesTab = ({
   return (
     <>
       {replies?.length === 0 ? (
-        <p className="p-4 text-center font-medium">No replies</p>
+         <div className="px-4 pt-6 text-center">
+         <p className="text-xl font-bold">{`@${userInfo.username} hasn’t replied to any posts`}</p>
+         <p className="text-sm">When they do, those replies will show up here.</p>
+       </div>
       ) : (
         replies?.map((thread: any) => (
-          <div key={thread.parentId._id.toString()}>
+          <div key={thread.parentId._id}>
             <article className="flex px-4 pb-2 pt-4 transition-colors duration-200 hover:bg-muted">
               <div className="flex w-14 flex-col">
                 <Link
@@ -40,7 +43,7 @@ const RepliesTab = ({
                 <div className="flex justify-between">
                   <div className="flex items-start gap-x-1">
                     <Link
-                      href={`/profile/${thread.parentId.authorId?._id.toString()}`}
+                      href={`/profile/${thread.parentId.authorId?._id}`}
                       className="contents">
                       <span className="text-sm font-bold hover:underline">
                         {thread.parentId.authorId?.name}
@@ -52,7 +55,7 @@ const RepliesTab = ({
                     <p
                       className="text-sm text-muted-foreground/75"
                       title={format(
-                        thread.parentId.created,
+                        new Date(thread.parentId.created),
                         "dd MMM yyyy hh:mm",
                       )}>
                       {calculateTimeDifference(thread.parentId.created)}
@@ -82,7 +85,7 @@ const RepliesTab = ({
                   </div>
                 )}
                 <ReactionStrip
-                  threadId={thread.parentId._id.toString()}
+                  threadId={thread.parentId._id}
                   userId={userInfo._id}
                   likes={thread.parentId.likes}
                   replies={thread.parentId.children?.length}
@@ -91,9 +94,9 @@ const RepliesTab = ({
               </div>
             </article>
             <PostCard
-              key={thread._id.toString()}
+              key={thread._id}
               text={thread.text}
-              _id={thread._id.toString()}
+              _id={thread._id}
               created={thread.created}
               postImages={thread.postImages}
               authorId={thread.authorId}

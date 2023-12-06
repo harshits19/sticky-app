@@ -1,6 +1,5 @@
 "use server"
 import { revalidatePath } from "next/cache"
-import mongoose from "mongoose"
 import { postNotification } from "@/lib/actions/notification.actions"
 import { connectToDB } from "@/lib/mongoose"
 import Thread from "@/lib/models/thread.model"
@@ -37,7 +36,8 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
       parentId: { $in: [null, undefined] },
     })
 
-    const posts = await postsQuery.exec()
+    const response = await postsQuery.exec()
+    const posts = JSON.parse(JSON.stringify(response))
 
     const isNext = totalPostsCount > skipAmount + posts.length
     return { posts, isNext }
@@ -50,10 +50,9 @@ export const getAllPosts = async (pageNumber = 1, pageSize = 20) => {
 export const getPostsByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
-    const formatAuthorId = new mongoose.Types.ObjectId(authorId)
     //select those posts(that belongs to author) that have no parent
     const posts = await Thread.find({
-      authorId: formatAuthorId,
+      authorId,
       parentId: { $in: [null, undefined] },
     })
       .sort({ created: "desc" })
@@ -70,7 +69,7 @@ export const getPostsByAuthorId = async (authorId: string) => {
 
     //select reply(belongs to author) and its parent-post(can be of diffrent author)
     const replies = await Thread.find({
-      authorId: formatAuthorId,
+      authorId,
       parentId: { $exists: true, $ne: null },
     })
       .sort({ created: "desc" })
@@ -94,9 +93,7 @@ export const getPostsByAuthorId = async (authorId: string) => {
       })
 
     //Finding reposts of specific User(in this case - post author)
-    const reposts = await User.findById({
-      _id: authorId,
-    })
+    const reposts = await User.findById(authorId)
       .select("reposts")
       .populate({
         path: "reposts",
@@ -107,7 +104,12 @@ export const getPostsByAuthorId = async (authorId: string) => {
           select: "_id name username profilePhoto",
         },
       })
-    return { posts, replies, reposts }
+    const response = {
+      posts: JSON.parse(JSON.stringify(posts)),
+      replies: JSON.parse(JSON.stringify(replies)),
+      reposts: JSON.parse(JSON.stringify(reposts)),
+    }
+    return response
   } catch (error: any) {
     throw new Error(`${error}`)
   }
@@ -117,7 +119,7 @@ export const getPostsByAuthorId = async (authorId: string) => {
 export const getThreadById = async (threadId: string) => {
   try {
     connectToDB()
-    return await Thread.findById({ _id: threadId })
+    const response = await Thread.findById({ _id: threadId })
       .populate({
         path: "authorId",
         model: User,
@@ -142,6 +144,7 @@ export const getThreadById = async (threadId: string) => {
           },
         ],
       })
+    return JSON.parse(JSON.stringify(response))
   } catch (error: any) {
     throw new Error(`${error}`)
   }
@@ -150,7 +153,7 @@ export const getThreadById = async (threadId: string) => {
 export const getFollowersByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
-    return await User.findOne({ _id: authorId })
+    const response = await User.findOne({ _id: authorId }).select("followers followings")
       .populate({
         path: "followers",
         model: User,
@@ -161,6 +164,7 @@ export const getFollowersByAuthorId = async (authorId: string) => {
         model: User,
         select: "_id name username profilePhoto bio followers",
       })
+    return JSON.parse(JSON.stringify(response))
   } catch (error: any) {
     throw new Error(`${error}`)
   }

@@ -19,12 +19,15 @@ const MidSection = ({
         </Button>
       )}
       {userId !== authorId && (
-        <FollowButton
-          authorId={authorId}
-          userId={userId}
-          status={status}
-          className={"mt-2 w-full"}
-        />
+        <div className="flex gap-x-2 items-center mt-2">
+          <FollowButton
+            authorId={authorId}
+            userId={userId}
+            status={status}
+            className={"w-full"}
+          />
+          <Button variant="outline" size="sm" className="w-full">Mention</Button>
+        </div>
       )}
     </>
   )

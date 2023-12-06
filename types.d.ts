@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 interface PostCardProps {
   text: string
   _id: string
-  created: Date
+  created: Date | string
   postImages: string[]
   authorId: {
     name: string
@@ -81,17 +81,17 @@ type ProfileCardProps = {
 }
 
 type NotificationProps = {
-  _id: mongoose.Schema.Types.ObjectId
+  _id: string
   authorId: string
   userId: {
-    _id: mongoose.Schema.Types.ObjectId
+    _id: string
     bio: string
     name: string
     profilePhoto: string
     username: string
   }
   threadId: {
-    _id: mongoose.Schema.Types.ObjectId
+    _id: string
     text: string
   }
   type: string

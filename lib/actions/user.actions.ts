@@ -25,7 +25,8 @@ export const getUser = async () => {
     const user = await currentUser()
     if (!user) throw new Error("User not found in database")
     const userId = user.id
-    return await User.findOne({ id: userId })
+    const response = await User.findOne({ id: userId })
+    return JSON.parse(JSON.stringify(response))
   } catch (error: any) {
     throw new Error(`${error}`)
   }
@@ -35,7 +36,8 @@ export const getUser = async () => {
 export const getUserByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
-    return await User.findOne({ _id: authorId })
+    const response = await User.findOne({ _id: authorId })
+    return JSON.parse(JSON.stringify(response))
   } catch (error: any) {
     throw new Error(`${error}`)
   }

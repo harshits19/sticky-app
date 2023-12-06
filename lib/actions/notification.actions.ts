@@ -12,7 +12,7 @@ export const getAllNotifications = async () => {
     if (!user) return
     const userInfo = await User.findOne({ id: user.id }).select("_id")
     const userId = userInfo._id.toString()
-    return await Notification.find({ authorId: userId })
+    const response = await Notification.find({ authorId: userId })
       .populate({
         path: "userId",
         model: User,
@@ -24,6 +24,7 @@ export const getAllNotifications = async () => {
         select: "text",
       })
       .sort({ created: "desc" })
+      return JSON.parse(JSON.stringify(response))
   } catch (error: any) {
     throw new Error(`${error}`)
   }

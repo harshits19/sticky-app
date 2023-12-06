@@ -1,9 +1,9 @@
-import { format } from "date-fns"
-import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import ReactionStrip from "@/components/shared/ReactionStrip"
-import ImageContainer from "../shared/ImageContainer"
+import ImageContainer from "@/components/shared/ImageContainer"
+import { format } from "date-fns"
+import { MoreHorizontal } from "lucide-react"
 import { PostCardProps } from "@/types"
 
 const ThreadCard = ({
@@ -37,7 +37,7 @@ const ThreadCard = ({
         <div className="flex justify-between">
           <div className="flex flex-col">
             <Link
-              href={`/profile/${authorId?._id.toString()}`}
+              href={`/profile/${authorId?._id}`}
               scroll={false}
               className="contents">
               <span className="text-sm font-bold leading-4 hover:underline">
@@ -55,7 +55,7 @@ const ThreadCard = ({
         </pre>
         <ImageContainer images={postImages} />
         <div className="pb-2 text-[13px] text-muted-foreground">
-          {format(created, "hh:mm aa · MMM dd,yyyy")}
+          {format(new Date(created), "hh:mm aa · MMM dd,yyyy")}
         </div>
         <ReactionStrip
           key={_id}

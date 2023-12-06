@@ -9,7 +9,7 @@ const HomePage = async () => {
   const userInfo = await getUser()
   return (
     <>
-      <Navbar authorId={userInfo._id.toString()} />
+      <Navbar authorId={userInfo._id} navTitle="Home"/>
       <CreatePost />
       <div>
         {posts?.length === 0 ? (
@@ -20,11 +20,11 @@ const HomePage = async () => {
               <PostCard
                 key={post.authorId}
                 text={post.text}
-                _id={post._id.toString()}
+                _id={post._id}
                 created={post.created}
                 postImages={post.postImages}
                 authorId={post.authorId}
-                userId={userInfo._id.toString()}
+                userId={userInfo._id}
                 likes={post.likes}
                 replies={post.children?.length}
                 reposts={userInfo.reposts}

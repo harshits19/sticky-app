@@ -9,9 +9,7 @@ const CreatePost = async () => {
     <>
       <div className="flex border-b border-muted px-4 pt-4">
         <div className="w-12">
-          <Link
-            href={`/profile/${userInfo._id.toString()}`}
-            className="contents">
+          <Link href={`/profile/${userInfo._id}`} className="contents">
             <Image
               src={userInfo?.profilePhoto}
               height={40}
@@ -21,7 +19,7 @@ const CreatePost = async () => {
             />
           </Link>
         </div>
-        <CreatePostForm userId={userInfo._id.toString()} />
+        <CreatePostForm userId={userInfo._id} />
       </div>
     </>
   )

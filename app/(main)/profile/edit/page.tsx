@@ -31,7 +31,7 @@ const EditPage = async () => {
   return (
     <>
       <Navbar
-        authorId={userInfo._id.toString()}
+        authorId={userInfo._id}
         authorName={userInfo?.name}
         username={userInfo?.username}
       />

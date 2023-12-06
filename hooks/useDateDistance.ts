@@ -1,4 +1,4 @@
-export const calculateTimeDifference = (unixDate: Date):string => {
+export const calculateTimeDifference = (unixDate: Date | string):string => {
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",]
     const providedDate = new Date(unixDate)
     const currentDate = new Date()
