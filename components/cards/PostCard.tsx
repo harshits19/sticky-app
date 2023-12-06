@@ -1,8 +1,17 @@
+"use client"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import ImageContainer from "@/components/shared/ImageContainer"
 import ReactionStrip from "@/components/shared/ReactionStrip"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { calculateTimeDifference } from "@/hooks/useDateDistance"
 import { PostCardProps } from "@/types"
 import { MoreHorizontal } from "lucide-react"
@@ -19,13 +28,19 @@ const PostCard = ({
   comment,
   reposts,
 }: PostCardProps) => {
+  const router = useRouter()
   return (
-    <article className="flex border-b border-muted p-4 transition-colors duration-200 hover:bg-muted">
+    <article
+      className="flex cursor-pointer border-b border-muted p-4 transition-colors duration-200 hover:bg-muted"
+      onClick={() => {
+        router.push(`/thread/${_id}`)
+      }}>
       <div className="h-full w-14">
         <Link
           href={`/profile/${authorId?._id}`}
           scroll={false}
-          className="contents">
+          className="contents"
+          onClick={(e) => e.stopPropagation()}>
           <Image
             src={authorId?.profilePhoto}
             alt="author-pic"
@@ -37,9 +52,10 @@ const PostCard = ({
       </div>
       <div className="w-full">
         <div className="flex justify-between">
-          <div className="flex items-start gap-x-1 flex-wrap">
+          <div className="flex flex-wrap items-start gap-x-1">
             <Link
               href={`/profile/${authorId?._id}`}
+              onClick={(e) => e.stopPropagation()}
               scroll={false}
               className="contents">
               <span className="text-sm font-bold hover:underline">
@@ -55,14 +71,31 @@ const PostCard = ({
               {calculateTimeDifference(created)}
             </p>
           </div>
-          <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted" />
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted-foreground/20" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent forceMount align="end">
+              <Link
+                href={`/profile/${authorId?._id}`}
+                onClick={(e) => e.stopPropagation()}
+                scroll={false}
+                className="contents">
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </Link>
+              {authorId._id === userId && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <Link href={`/thread/${_id}`} className="contents">
-          <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
-            {text}
-          </pre>
-        </Link>
-        <ImageContainer images={postImages} />
+        <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
+          {text}
+        </pre>
+        <ImageContainer images={postImages} removeImg={() => {}} />
         <ReactionStrip
           key={_id}
           threadId={_id}

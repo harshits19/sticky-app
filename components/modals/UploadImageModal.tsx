@@ -14,7 +14,7 @@ const UploadImageModal = ({
   userId?: string
   profilePic?: boolean
 }) => {
-  const { isOpen, onClose, url, addImg } = useProfilePhoto()
+  const { isOpen, onClose, url } = useProfilePhoto()
   const [file, setFile] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { edgestore } = useEdgeStore()
@@ -39,7 +39,6 @@ const UploadImageModal = ({
           replaceTargetUrl: url,
         },
       })
-      addImg(res.url)
       userId &&
         profilePic &&
         (await updateUser({

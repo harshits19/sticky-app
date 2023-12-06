@@ -2,13 +2,18 @@ import Image from "next/image"
 import Link from "next/link"
 import FollowButton from "@/components/shared/FollowButton"
 import { ProfileCardProps } from "@/types"
+import { cn } from "@/lib/utils"
 
 const ProfileCard = ({
   data,
   userId,
+  asChild,
+  className,
 }: {
   data: ProfileCardProps
   userId: string
+  asChild?: boolean
+  className?: string
 }) => {
   const isFollowing = data?.followers?.find(
     (author: string) => author === userId,
@@ -16,7 +21,11 @@ const ProfileCard = ({
     ? true
     : false
   return (
-    <div className="flex p-4 transition-colors duration-200 hover:bg-muted">
+    <div
+      className={cn(
+        "flex p-4 transition-colors duration-200 hover:bg-muted",
+        className,
+      )}>
       <Link href={`/profile/${data._id}`} className="contents">
         <div className="min-w-[3rem]">
           <Image
@@ -36,14 +45,14 @@ const ProfileCard = ({
             {"@" + data.username}
           </h4>
         </Link>
-        <p className="pt-1 text-sm">{data.bio}</p>
+        {!asChild && <p className="pt-1 text-sm">{data.bio}</p>}
       </div>
       {data._id !== userId && (
         <FollowButton
           authorId={data?._id}
           userId={userId}
           status={isFollowing}
-          className={"rounded-full"}
+          className={asChild ? "h-8 rounded-full px-3" : "rounded-full"}
         />
       )}
     </div>

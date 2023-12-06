@@ -15,17 +15,17 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
     <>
       <main className="mx-auto flex min-h-screen w-full justify-center xl:max-w-7xl">
         <LeftSidebar
-          userId={userInfo?._id.toString()}
+          userId={userInfo?._id}
           username={userInfo?.username}
           name={userInfo?.name}
           imageURL={userInfo?.profilePhoto}
           notificationStatus={notificationStatus?.hasNotification}
         />
         <section className="w-full sm:max-w-xl">{children}</section>
-        <RightSidebar />
+        <RightSidebar userId={userInfo?._id} />
       </main>
       <Bottombar
-        userId={userInfo?._id.toString()}
+        userId={userInfo?._id}
         notificationStatus={notificationStatus?.hasNotification}
       />
     </>

@@ -3,6 +3,7 @@ import Navbar from "@/components/shared/Navbar"
 import CreatePost from "@/app/(main)/create-post/page"
 import { getAllPosts } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
+import { Post } from "@/types"
 
 const HomePage = async () => {
   const { posts } = await getAllPosts()
@@ -15,10 +16,10 @@ const HomePage = async () => {
         {posts?.length === 0 ? (
           <p className="pt-8 text-center text-xl font-semibold">No Posts</p>
         ) : (
-          posts?.map((post: any) => {
+          posts?.map((post: Post) => {
             return (
               <PostCard
-                key={post.authorId}
+                key={post._id}
                 text={post.text}
                 _id={post._id}
                 created={post.created}

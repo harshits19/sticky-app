@@ -86,5 +86,5 @@ body {
   }
 }
 .no-focus {
-  @apply focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 my-0 !important;
+  @apply my-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
 }

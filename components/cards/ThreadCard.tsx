@@ -53,7 +53,7 @@ const ThreadCard = ({
         <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
           {text}
         </pre>
-        <ImageContainer images={postImages} />
+        <ImageContainer images={postImages} removeImg={() => {}} />
         <div className="pb-2 text-[13px] text-muted-foreground">
           {format(new Date(created), "hh:mm aa · MMM dd,yyyy")}
         </div>

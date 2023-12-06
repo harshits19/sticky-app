@@ -9,7 +9,10 @@ import { ThemeProvider } from "@/components/providers/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Sticky",
+  title: {
+    template: "%s | Sticky",
+    default: "Sticky",
+  },
   description: "A versatile socializing app",
 }
 

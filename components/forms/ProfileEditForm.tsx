@@ -50,7 +50,7 @@ const ProfileEditForm = ({
   btnTitle: string
   editForm?: boolean
 }) => {
-  const { onOpen, clearImgStore } = useProfilePhoto()
+  const { onOpen, clearUrl } = useProfilePhoto()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -82,7 +82,7 @@ const ProfileEditForm = ({
       toast.success(
         `Profile ${pathname === "/onboarding" ? "created!" : "updated!"}`,
       )
-      clearImgStore()
+      clearUrl()
       if (pathname === "/profile/edit") {
         router.back()
       } else {

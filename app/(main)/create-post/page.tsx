@@ -1,7 +1,12 @@
+import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import CreatePostForm from "@/components/forms/CreatePostForm"
 import { getUser } from "@/lib/actions/user.actions"
+
+export const metadata: Metadata = {
+  title: "Create Post",
+}
 
 const CreatePost = async () => {
   const userInfo = await getUser()
