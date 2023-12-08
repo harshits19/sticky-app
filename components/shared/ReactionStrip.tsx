@@ -98,10 +98,10 @@ const ReactionStrip = ({
       </div>
       <div className="flex pl-2 text-sm text-muted-foreground/90">
         {replies > 0 &&
-          `${formatNum(replies)} ${replies > 1 ? "replies" : "reply"}`}
-        {replies > 0 && likes.length > 0 && <span className="px-1">·</span>}
-        {likes.length > 0 &&
-          `${formatNum(likes.length)} ${likes.length > 1 ? "likes" : "like"}`}
+          `${replies && formatNum(replies)} ${replies > 1 ? "replies" : "reply"}`}
+        {replies > 0 && likes?.length > 0 && <span className="px-1">·</span>}
+        {likes?.length > 0 &&
+          `${formatNum(likes?.length)} ${likes?.length > 1 ? "likes" : "like"}`}
       </div>
     </div>
   )

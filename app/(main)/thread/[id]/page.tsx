@@ -33,20 +33,20 @@ const ThreadPage = async ({
     <>
       <Navbar navTitle="Post" />
       <ThreadCard
-        key={post.authorId}
-        text={post.text}
+        key={post?.authorId}
+        text={post?.text}
         _id={id}
-        created={post.created}
-        postImages={post.postImages}
-        authorId={post.authorId}
-        likes={post.likes}
-        replies={post.children?.length}
-        userId={userInfo._id}
-        reposts={userInfo.reposts}
+        created={post?.created}
+        postImages={post?.postImages}
+        authorId={post?.authorId}
+        likes={post?.likes}
+        replies={post?.children?.length}
+        userId={userInfo?._id}
+        reposts={userInfo?.reposts}
       />
       <div className="flex border-b border-muted px-4 pt-2">
         <div className="w-12">
-          <Link href={`/profile/${userInfo._id}`} className="contents">
+          <Link href={`/profile/${userInfo?._id}`} className="contents">
             <Image
               src={userInfo?.profilePhoto}
               height={40}
@@ -56,7 +56,7 @@ const ThreadPage = async ({
             />
           </Link>
         </div>
-        <CreateCommentForm parentId={post._id} userId={userInfo._id} />
+        <CreateCommentForm parentId={post?._id} userId={userInfo?._id} />
       </div>
       {post?.children &&
         post?.children?.map((thread: Post) => {
@@ -66,12 +66,12 @@ const ThreadPage = async ({
               text={thread.text}
               _id={thread._id}
               created={thread.created}
-              postImages={thread.postImages}
-              authorId={thread.authorId}
+              postImages={thread?.postImages}
+              authorId={thread?.authorId}
               likes={thread?.likes}
-              replies={thread.children?.length}
-              userId={userInfo._id}
-              reposts={userInfo.reposts}
+              replies={thread?.children?.length}
+              userId={userInfo?._id}
+              reposts={userInfo?.reposts}
               comment
             />
           )

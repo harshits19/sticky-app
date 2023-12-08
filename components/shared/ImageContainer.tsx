@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { useLightBox } from "@/hooks/useLightBox"
 import { XIcon } from "lucide-react"
 
 const ImageContainer = ({
@@ -11,6 +12,7 @@ const ImageContainer = ({
   isForm?: boolean
   removeImg: (url: string) => void
 }) => {
+  const { addUrl } = useLightBox()
   return (
     images?.length > 0 && (
       <div
@@ -19,7 +21,13 @@ const ImageContainer = ({
           images?.length > 1 && "grid-cols-2",
         )}>
         {images?.map((imgUrl) => (
-          <div key={imgUrl} className="relative">
+          <div
+            key={imgUrl}
+            className={cn("relative", images?.length > 1 && "max-h-64")}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (!isForm) addUrl(imgUrl)
+            }}>
             {isForm && (
               <div
                 className="absolute right-1 top-1 cursor-pointer rounded-full bg-black/90 p-1.5 hover:bg-black"

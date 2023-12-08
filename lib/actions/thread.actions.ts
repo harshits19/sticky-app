@@ -4,6 +4,7 @@ import { postNotification } from "@/lib/actions/notification.actions"
 import { connectToDB } from "@/lib/mongoose"
 import Thread from "@/lib/models/thread.model"
 import User from "@/lib/models/user.model"
+import Notification from "@/lib/models/notification.model"
 
 interface threadProps {
   userId: string
@@ -153,7 +154,8 @@ export const getThreadById = async (threadId: string) => {
 export const getFollowersByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
-    const response = await User.findOne({ _id: authorId }).select("followers followings")
+    const response = await User.findOne({ _id: authorId })
+      .select("followers followings")
       .populate({
         path: "followers",
         model: User,
@@ -225,6 +227,67 @@ export const createComment = async ({
     revalidatePath(path)
   } catch (error: any) {
     throw new Error(`${error}`)
+  }
+}
+
+const fetchAllChildThreads = async (threadId: string): Promise<any[]> => {
+  const childThreads = await Thread.find({ parentId: threadId })
+
+  const descendantThreads = []
+  for (const childThread of childThreads) {
+    const descendants = await fetchAllChildThreads(childThread._id)
+    descendantThreads.push(childThread, ...descendants)
+  }
+
+  return descendantThreads
+}
+
+export const deleteThread = async (
+  threadId: string,
+  path: string,
+): Promise<void> => {
+  try {
+    connectToDB()
+    // Find the thread to be deleted (the main thread)
+    const mainThread = await Thread.findById(threadId).populate("authorId")
+
+    if (!mainThread) throw new Error("Thread not found")
+
+    // Fetch all child threads and their descendants recursively
+    const descendantThreads = await fetchAllChildThreads(threadId)
+
+    // Get all descendant thread IDs including the main thread ID and child thread IDs
+    const descendantThreadIds = [
+      threadId,
+      ...descendantThreads.map((thread) => thread._id),
+    ]
+
+    // Extract the authorIds and communityIds to update User and Community models respectively
+    const uniqueAuthorIds = new Set(
+      [
+        ...descendantThreads.map((thread) => thread.authorId?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainThread.authorId?._id?.toString(),
+      ].filter((id) => id !== undefined),
+    )
+
+    // Recursively delete child threads and their descendants
+    await Thread.deleteMany({ _id: { $in: descendantThreadIds } })
+    await Notification.deleteMany({ threadId: { $in: descendantThreadIds } })
+
+    // Update User model
+    await User.updateMany(
+      { _id: { $in: Array.from(uniqueAuthorIds) } },
+      {
+        $pull: {
+          reposts: { $in: descendantThreadIds },
+          userPosts: { $in: descendantThreadIds },
+          notifications: { $in: descendantThreadIds },
+        },
+      },
+    )
+    revalidatePath(path)
+  } catch (error: any) {
+    throw new Error(`Failed to delete thread: ${error.message}`)
   }
 }
 

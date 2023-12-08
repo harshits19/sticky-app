@@ -23,8 +23,13 @@ const CreateCommentForm = ({
 
   const removeImg = async (url: string) => {
     try {
-      await edgestore.publicFiles.delete({
+      const promise = edgestore.publicFiles.delete({
         url,
+      })
+      toast.promise(promise, {
+        loading: "Removing image...",
+        success: "Image removed!",
+        error: "Failed to remove image",
       })
       const newStore = store.filter((imgUrl) => imgUrl !== url)
       setStore([...newStore])
@@ -34,6 +39,7 @@ const CreateCommentForm = ({
   }
   const onChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
+      toast.loading("Uploading Image...")
       const fileInp = e.target.files?.[0]
       if (!fileInp) return
       setIsSubmitting(true)
@@ -54,12 +60,17 @@ const CreateCommentForm = ({
     setIsSubmitting(true)
     e.preventDefault()
     try {
-      await createComment({
+      const promise = createComment({
         userId,
         parentId,
         content: value,
         postImg: store,
         path: `/thread/${parentId}`,
+      })
+      toast.promise(promise, {
+        loading: "Posting reply...",
+        success: "Reply posted!",
+        error: "Failed to post reply",
       })
     } catch (err) {
       console.log(err)

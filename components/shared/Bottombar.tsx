@@ -14,7 +14,7 @@ const Bottombar = ({
 }) => {
   const pathname = usePathname()
   return (
-    <main className="sticky bottom-0 left-0 flex w-full justify-evenly border-t-[1px] border-t-muted bg-background sm:hidden">
+    <main className="fixed bottom-0 left-0 right-0 flex w-full justify-evenly border-t-[1px] border-t-muted bg-background sm:hidden">
       <Link href="/" className="contents">
         <div className="flex w-full items-center justify-center rounded-md py-3 hover:bg-muted">
           <HomeIcon

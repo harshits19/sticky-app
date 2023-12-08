@@ -30,7 +30,7 @@ const OnboardPage = async () => {
   return (
     <main className="relative flex h-full flex-col items-center justify-center">
       <Button size="sm" className="absolute right-0 top-0 m-4 sm:m-8">
-        <Link href="/" className="contents" prefetch={false} replace={true}>
+        <Link href="/" className="contents" replace={true}>
           Skip <ChevronRight className="ml-1 h-4 w-4" />
         </Link>
       </Button>

@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { format } from "date-fns"
 import ImageContainer from "@/components/shared/ImageContainer"
 import ReactionStrip from "@/components/shared/ReactionStrip"
@@ -12,7 +12,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { toast } from "sonner"
 import { calculateTimeDifference } from "@/hooks/useDateDistance"
+import { deleteThread } from "@/lib/actions/thread.actions"
 import { PostCardProps } from "@/types"
 import { MoreHorizontal } from "lucide-react"
 
@@ -29,10 +31,21 @@ const PostCard = ({
   reposts,
 }: PostCardProps) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const handleDelete = async (e: any) => {
+    e.stopPropagation()
+    const promise = deleteThread(_id, pathname)
+    toast.promise(promise, {
+      loading: "Deleting Post...",
+      success: "Post deleted!",
+      error: "Failed to delete post",
+    })
+  }
   return (
     <article
       className="flex cursor-pointer border-b border-muted p-4 transition-colors duration-200 hover:bg-muted"
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation()
         router.push(`/thread/${_id}`)
       }}>
       <div className="h-full w-14">
@@ -86,7 +99,9 @@ const PostCard = ({
               {authorId._id === userId && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDelete}>
+                    Delete
+                  </DropdownMenuItem>
                 </>
               )}
             </DropdownMenuContent>

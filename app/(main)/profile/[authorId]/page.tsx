@@ -114,13 +114,13 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
           <TabsTrigger value="reposts">Reposts</TabsTrigger>
         </TabsList>
         <TabsContent value="posts">
-          <ThreadsTab posts={posts} userInfo={userInfo} />
+          <ThreadsTab posts={posts} userInfo={userInfo} authorName={author.username}/>
         </TabsContent>
         <TabsContent value="replies">
-          <RepliesTab replies={replies} userInfo={userInfo} />
+          <RepliesTab replies={replies} userInfo={userInfo} authorName={author.username} />
         </TabsContent>
         <TabsContent value="reposts">
-          <RepostsTab reposts={reposts.reposts} userInfo={userInfo} />
+          <RepostsTab reposts={reposts.reposts} userInfo={userInfo} authorName={author.username} />
         </TabsContent>
       </Tabs>
     </section>

@@ -10,15 +10,17 @@ import { User } from "@/types"
 const RepliesTab = ({
   replies,
   userInfo,
+  authorName
 }: {
   replies: any
   userInfo: User
+  authorName:string 
 }) => {
   return (
     <>
       {replies?.length === 0 ? (
          <div className="px-4 pt-6 text-center">
-         <p className="text-xl font-bold">{`@${userInfo.username} hasn’t replied to any posts`}</p>
+         <p className="text-xl font-bold">{`@${authorName} hasn’t replied to any posts`}</p>
          <p className="text-sm">When they do, those replies will show up here.</p>
        </div>
       ) : (

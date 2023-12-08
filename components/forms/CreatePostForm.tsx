@@ -19,8 +19,13 @@ const CreatePostForm = ({ userId }: { userId: string }) => {
 
   const removeImg = async (url: string) => {
     try {
-      await edgestore.publicFiles.delete({
+      const promise = edgestore.publicFiles.delete({
         url,
+      })
+      toast.promise(promise, {
+        loading: "Removing image...",
+        success: "Image removed!",
+        error: "Failed to remove image",
       })
       const newStore = store.filter((imgUrl) => imgUrl !== url)
       setStore([...newStore])
@@ -31,9 +36,10 @@ const CreatePostForm = ({ userId }: { userId: string }) => {
 
   const onChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
+      toast.loading("Uploading Image...")
+      setIsSubmitting(true)
       const fileInp = e.target.files?.[0]
       if (!fileInp) return
-      setIsSubmitting(true)
       const res = await edgestore.publicFiles.upload({
         file: fileInp,
       })
@@ -51,11 +57,16 @@ const CreatePostForm = ({ userId }: { userId: string }) => {
     setIsSubmitting(true)
     e.preventDefault()
     try {
-      await createThread({
+      const promise = createThread({
         userId,
         content: value,
         postImg: store,
         path: "/create-post",
+      })
+      toast.promise(promise, {
+        loading: "Creating post...",
+        success: "Post created!",
+        error: "Failed to create Post",
       })
     } catch (err) {
       console.log(err)

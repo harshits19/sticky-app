@@ -10,7 +10,7 @@ const HomePage = async () => {
   const userInfo = await getUser()
   return (
     <>
-      <Navbar authorId={userInfo._id} navTitle="Home"/>
+      <Navbar authorId={userInfo._id} navTitle="Home" />
       <CreatePost />
       <div>
         {posts?.length === 0 ? (

@@ -1,10 +1,21 @@
+"use client"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { format } from "date-fns"
 import ReactionStrip from "@/components/shared/ReactionStrip"
 import ImageContainer from "@/components/shared/ImageContainer"
-import { format } from "date-fns"
-import { MoreHorizontal } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { toast } from "sonner"
+import { deleteThread } from "@/lib/actions/thread.actions"
 import { PostCardProps } from "@/types"
+import { MoreHorizontal } from "lucide-react"
 
 const ThreadCard = ({
   text,
@@ -17,11 +28,24 @@ const ThreadCard = ({
   userId,
   reposts,
 }: PostCardProps) => {
+  const pathname = usePathname()
+  const router = useRouter()
+  const handleDelete = async (e:any) => {
+    e.stopPropagation()
+    const promise = deleteThread(_id, pathname)
+    toast.promise(promise, {
+      loading: "Deleting Post...",
+      success: "Post deleted!",
+      error: "Failed to delete post",
+    })
+    router.push("/")
+  }
+
   return (
     <article className="flex border-y border-muted p-4">
       <div className="h-full w-14">
         <Link
-          href={`/profile/${authorId._id}`}
+          href={`/profile/${authorId?._id}`}
           scroll={false}
           className="contents">
           <Image
@@ -48,14 +72,35 @@ const ThreadCard = ({
               </span>
             </Link>
           </div>
-          <MoreHorizontal className="h-7 w-7 rounded-full p-1 hover:bg-muted" />
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted-foreground/20" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent forceMount align="end">
+              <Link
+                href={`/profile/${authorId?._id}`}
+                onClick={(e) => e.stopPropagation()}
+                scroll={false}
+                className="contents">
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </Link>
+              {authorId?._id === userId && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleDelete}>
+                    Delete
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
           {text}
         </pre>
         <ImageContainer images={postImages} removeImg={() => {}} />
         <div className="pb-2 text-[13px] text-muted-foreground">
-          {format(new Date(created), "hh:mm aa · MMM dd,yyyy")}
+          {created && format(new Date(created), "hh:mm aa · MMM dd,yyyy")}
         </div>
         <ReactionStrip
           key={_id}

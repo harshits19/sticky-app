@@ -3,15 +3,17 @@ import { Post, User } from "@/types"
 const RepostsTab = ({
   reposts,
   userInfo,
+  authorName
 }: {
   reposts: any
   userInfo: User
+  authorName:string 
 }) => {
   return (
     <>
       {reposts.length === 0 ? (
         <div className="px-4 pt-6 text-center">
-          <p className="text-xl font-bold">{`@${userInfo.username} hasn’t resposted any posts`}</p>
+          <p className="text-xl font-bold">{`@${authorName} hasn’t resposted any posts`}</p>
           <p className="text-sm">When they do, those posts will show up here.</p>
         </div>
       ) : (
