@@ -1,5 +1,6 @@
 "use client"
 import Link from "next/link"
+import { useOptimistic } from "react"
 import { usePathname } from "next/navigation"
 import { formatNum } from "@/hooks/useFormatNum"
 import {
@@ -32,38 +33,44 @@ const ReactionStrip = ({
 }: Props) => {
   const pathname = usePathname()
   const isLiked = likes?.find((like) => userId === like) ? true : false
-  const isReposted = reposts?.find((thread) => thread === threadId)
-    ? true
-    : false
+  const isReposted = reposts?.find((thread) => thread === threadId) ? true : false
+  const [optimisticLike, setOptimisticLike] = useOptimistic(isLiked)
+  const [optimisticRepost, setOptimisticRepost] = useOptimistic(isReposted)
   const handleReaction = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (isLiked)
+    if (optimisticLike) {
       await dislikePost({
         userId,
         threadId,
         path: pathname,
       })
-    else
+      setOptimisticLike(false)
+    } else {
       await likePost({
         userId,
         threadId,
         path: pathname,
       })
+      setOptimisticLike(true)
+    }
   }
   const handleRepost = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (isReposted)
+    if (optimisticRepost) {
       await unrepost({
         userId,
         threadId,
         path: pathname,
       })
-    else
+      setOptimisticRepost(false)
+    } else {
       await repost({
         userId,
         threadId,
         path: pathname,
       })
+      setOptimisticRepost(true)
+    }
   }
   return (
     <div className="flex flex-col">
@@ -74,9 +81,9 @@ const ReactionStrip = ({
           onClick={(e) => handleReaction(e)}>
           <LikeIcon
             className={
-              isLiked ? "fill-red-500 stroke-red-500" : "stroke-current"
+              optimisticLike ? "fill-red-500 stroke-red-500" : "stroke-current"
             }
-            title={isLiked ? "Unlike" : "Like"}
+            title={optimisticLike ? "Unlike" : "Like"}
           />
         </div>
         <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
@@ -88,8 +95,8 @@ const ReactionStrip = ({
           className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted"
           onClick={handleRepost}>
           <RepostIcon
-            className={isReposted ? " fill-green-500" : "fill-current"}
-            title={isReposted ? "Unpost" : "Repost"}
+            className={optimisticRepost ? " fill-green-500" : "fill-current"}
+            title={optimisticRepost ? "Unpost" : "Repost"}
           />
         </div>
         <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-muted">
@@ -98,7 +105,9 @@ const ReactionStrip = ({
       </div>
       <div className="flex pl-2 text-sm text-muted-foreground/90">
         {replies > 0 &&
-          `${replies && formatNum(replies)} ${replies > 1 ? "replies" : "reply"}`}
+          `${replies && formatNum(replies)} ${
+            replies > 1 ? "replies" : "reply"
+          }`}
         {replies > 0 && likes?.length > 0 && <span className="px-1">·</span>}
         {likes?.length > 0 &&
           `${formatNum(likes?.length)} ${likes?.length > 1 ? "likes" : "like"}`}
