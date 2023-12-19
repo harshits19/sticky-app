@@ -30,7 +30,7 @@ const ThreadCard = ({
 }: PostCardProps) => {
   const pathname = usePathname()
   const router = useRouter()
-  const handleDelete = async (e:any) => {
+  const handleDelete = async (e: any) => {
     e.stopPropagation()
     const promise = deleteThread(_id, pathname)
     toast.promise(promise, {
@@ -82,12 +82,16 @@ const ThreadCard = ({
                 onClick={(e) => e.stopPropagation()}
                 scroll={false}
                 className="contents">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  Profile
+                </DropdownMenuItem>
               </Link>
               {authorId?._id === userId && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleDelete}>
+                  <DropdownMenuItem
+                    onClick={handleDelete}
+                    className="cursor-pointer">
                     Delete
                   </DropdownMenuItem>
                 </>

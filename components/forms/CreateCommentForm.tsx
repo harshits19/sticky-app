@@ -87,7 +87,7 @@ const CreateCommentForm = ({
       <form className="w-full" onSubmit={(e) => onSubmit(e)}>
         <Textarea
           placeholder="post your reply.."
-          className="no-focus h-16 resize-none border-none text-base"
+          className="no-focus h-32 resize-none border-none text-base"
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />

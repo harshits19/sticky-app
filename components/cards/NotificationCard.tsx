@@ -76,7 +76,7 @@ const NotificationCard = ({
           </div>
         </div>
       </div>
-      <div className="pl-2 text-sm text-muted-foreground">
+      <div className="pl-2 text-sm text-muted-foreground shrink-0">
         {calculateTimeDifference(notification?.created)}
       </div>
     </div>

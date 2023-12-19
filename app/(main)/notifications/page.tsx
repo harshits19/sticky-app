@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const NotificationPage = async () => {
   const notifications = await getAllNotifications()
   return (
-    <div>
+    <>
       <Navbar navTitle="Notifications" />
       <div className="flex flex-col">
         {notifications?.length === 0 ? (
@@ -30,7 +30,7 @@ const NotificationPage = async () => {
           })
         )}
       </div>
-    </div>
+    </>
   )
 }
 export default NotificationPage

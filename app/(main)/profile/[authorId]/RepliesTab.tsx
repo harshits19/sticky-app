@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image"
 import Link from "next/link"
 import PostCard from "@/components/cards/PostCard"
@@ -6,33 +7,42 @@ import { calculateTimeDifference } from "@/hooks/useDateDistance"
 import { format } from "date-fns"
 import { MoreHorizontal } from "lucide-react"
 import { User } from "@/types"
+import { useRouter } from "next/navigation"
+import ImageContainer from "@/components/shared/ImageContainer"
 
 const RepliesTab = ({
   replies,
   userInfo,
-  authorName
+  authorName,
 }: {
   replies: any
   userInfo: User
-  authorName:string 
+  authorName: string
 }) => {
+  const router = useRouter()
   return (
     <>
       {replies?.length === 0 ? (
-         <div className="px-4 pt-6 text-center">
-         <p className="text-xl font-bold">{`@${authorName} hasn’t replied to any posts`}</p>
-         <p className="text-sm">When they do, those replies will show up here.</p>
-       </div>
+        <div className="px-4 pt-6 text-center">
+          <p className="text-xl font-bold">{`@${authorName} hasn’t replied to any posts`}</p>
+          <p className="text-sm">
+            When they do, those replies will show up here.
+          </p>
+        </div>
       ) : (
         replies?.map((thread: any) => (
-          <div key={thread.parentId._id}>
+          <div
+            key={thread.parentId._id}
+            onClick={() => router.push(`/thread/${thread?.parentId?._id}`)}
+            className="cursor-pointer">
             <article className="flex px-4 pb-2 pt-4 transition-colors duration-200 hover:bg-muted">
               <div className="flex w-14 flex-col">
                 <Link
-                  href={`/profile/${thread.parentId.authorId._id}`}
+                  href={`/profile/${thread?.parentId?.authorId?._id}`}
+                  onClick={(e) => e.stopPropagation()}
                   className="contents">
                   <Image
-                    src={thread.parentId.authorId?.profilePhoto}
+                    src={thread?.parentId?.authorId?.profilePhoto}
                     alt="author-pic"
                     height={40}
                     width={40}
@@ -45,66 +55,50 @@ const RepliesTab = ({
                 <div className="flex justify-between">
                   <div className="flex items-start gap-x-1">
                     <Link
-                      href={`/profile/${thread.parentId.authorId?._id}`}
-                      className="contents">
+                      href={`/profile/${thread?.parentId?.authorId?._id}`}
+                      className="contents"
+                      onClick={(e) => e.stopPropagation()}>
                       <span className="text-sm font-bold hover:underline">
-                        {thread.parentId.authorId?.name}
+                        {thread?.parentId?.authorId?.name}
                       </span>
                       <span className="text-sm text-muted-foreground">
-                        {"@" + thread.parentId.authorId?.username + " · "}
+                        {"@" + thread?.parentId?.authorId?.username + " · "}
                       </span>
                     </Link>
                     <p
                       className="text-sm text-muted-foreground/75"
                       title={format(
-                        new Date(thread.parentId.created),
+                        new Date(thread?.parentId?.created),
                         "dd MMM yyyy hh:mm",
                       )}>
-                      {calculateTimeDifference(thread.parentId.created)}
+                      {calculateTimeDifference(thread?.parentId?.created)}
                     </p>
                   </div>
                   <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted" />
                 </div>
                 <div className="py-2 text-base leading-none">
-                  <Link
-                    href={`/thread/${thread.parentId._id}`}
-                    className="contents">
-                    {thread.parentId.text}
-                  </Link>
+                  {thread?.parentId?.text}
                 </div>
-                {thread.parentId.postImages?.length > 0 && (
-                  <div className="flex gap-x-2 pb-2">
-                    {thread.parentId.postImages?.map((imgUrl: string) => (
-                      <div className="relative h-64 w-full" key={imgUrl}>
-                        <Image
-                          src={imgUrl}
-                          alt="post-image"
-                          className="rounded-xl"
-                          fill
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <ImageContainer images={thread?.parentId?.postImages} removeImg={() => {}}  />
                 <ReactionStrip
-                  threadId={thread.parentId._id}
-                  userId={userInfo._id}
-                  likes={thread.parentId.likes}
-                  replies={thread.parentId.children?.length}
-                  reposts={userInfo.reposts}
+                  threadId={thread?.parentId._id}
+                  userId={userInfo?._id}
+                  likes={thread?.parentId?.likes}
+                  replies={thread?.parentId?.children?.length}
+                  reposts={userInfo?.reposts}
                 />
               </div>
             </article>
             <PostCard
-              key={thread._id}
-              text={thread.text}
-              _id={thread._id}
-              created={thread.created}
-              postImages={thread.postImages}
-              authorId={thread.authorId}
+              key={thread?._id}
+              text={thread?.text}
+              _id={thread?._id}
+              created={thread?.created}
+              postImages={thread?.postImages}
+              authorId={thread?.authorId}
               parentId={thread?.parentId}
               likes={thread?.likes}
-              replies={thread.children?.length}
+              replies={thread?.children?.length}
               reposts={userInfo?.reposts}
               userId={userInfo?._id}
               comment

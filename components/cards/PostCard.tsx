@@ -94,12 +94,16 @@ const PostCard = ({
                 onClick={(e) => e.stopPropagation()}
                 scroll={false}
                 className="contents">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  Profile
+                </DropdownMenuItem>
               </Link>
               {authorId._id === userId && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleDelete}>
+                  <DropdownMenuItem
+                    onClick={handleDelete}
+                    className="cursor-pointer">
                     Delete
                   </DropdownMenuItem>
                 </>
