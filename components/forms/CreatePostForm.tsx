@@ -85,7 +85,7 @@ const CreatePostForm = ({ userId }: { userId: string }) => {
       <form className="w-full" onSubmit={(e) => onSubmit(e)}>
         <Textarea
           placeholder="Write a post..."
-          className="no-focus h-32 resize-none border-none text-base"
+          className="no-focus h-24 resize-y border-none text-base"
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />

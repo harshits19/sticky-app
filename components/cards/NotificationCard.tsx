@@ -27,7 +27,7 @@ const NotificationCard = ({
   }
   return (
     <div
-      className="flex w-full cursor-pointer border-b border-muted px-4 py-2 text-sm hover:bg-muted sm:px-6 sm:py-4"
+      className="flex w-full cursor-pointer border-b border-muted px-4 py-2 text-base hover:bg-muted sm:px-6 sm:py-4"
       onClick={handlePostClick}>
       <div className="w-6 flex-shrink-0 sm:w-10">
         {notification.type === "like" && (
