@@ -36,7 +36,7 @@ const ProfilePage = async ({ params: { authorId } }: Props) => {
   return (
     <section>
       <TopSection author={author} authorId={authorId} isFollowed={isFollowed} />
-      <MidSection userId={userId} authorId={authorId} status={isFollowing} />
+      <MidSection userId={userId} authorId={authorId} isFollowing={isFollowing} />
       <Tabs defaultValue="posts" className="w-full">
         <TabsList>
           <TabsTrigger value="posts">Posts</TabsTrigger>

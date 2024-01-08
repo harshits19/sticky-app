@@ -1,8 +1,8 @@
 "use client"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { followPostAuthor, unfollowPostAuthor } from "@/lib/actions/user.actions"
 import { cn } from "@/lib/utils"
-import { usePathname } from "next/navigation"
 
 const FollowButton = ({
   userId,

@@ -5,11 +5,11 @@ import Link from "next/link"
 const MidSection = ({
   userId,
   authorId,
-  status,
+  isFollowing,
 }: {
   userId: string
   authorId: string
-  status: boolean
+  isFollowing: boolean
 }) => {
   return (
     <div className="p-4">
@@ -23,7 +23,7 @@ const MidSection = ({
           <FollowButton
             authorId={authorId}
             userId={userId}
-            status={status}
+            status={isFollowing}
             className={"w-full"}
           />
           <Button variant="outline" size="sm" className="w-full">

@@ -15,7 +15,7 @@ const RepliesTab = async ({
   return (
     <>
       {replies?.length === 0 ? (
-        <div className="px-4 pt-6 text-center">
+        <div className="px-4 py-36 text-center">
           <p className="text-xl font-bold">{`@${authorName} hasn’t replied to any posts`}</p>
           <p className="text-sm">
             When they do, those replies will show up here.

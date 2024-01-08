@@ -12,7 +12,7 @@ const RightSidebar = async () => {
   return (
     <main className="sticky top-0 hidden h-screen w-full max-w-xs border-l border-muted p-4 lg:flex">
       {!!users.length && (
-        <div className="h-max w-full rounded-lg bg-muted">
+        <div className="h-max w-full rounded-lg bg-muted/60">
           <h2 className="px-4 py-2 text-xl font-bold">Who to follow</h2>
           {users?.map((user: ProfileCardProps) => (
             <ProfileCard

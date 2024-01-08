@@ -1,6 +1,8 @@
 "use client"
+
 import Image from "next/image"
-import { NotificationProps } from "@/types"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   LikeIcon,
   ReplyIcon,
@@ -8,22 +10,15 @@ import {
   UserIcon,
 } from "@/components/shared/Icons"
 import { calculateTimeDifference } from "@/hooks/useDateDistance"
-import { useRouter } from "next/navigation"
+import { Notification } from "@/types"
 
-const NotificationCard = ({
-  notification,
-}: {
-  notification: NotificationProps
-}) => {
+const NotificationCard = ({ notification }: { notification: Notification }) => {
   const router = useRouter()
-  const handlePostClick = () => {
+  const handlePostClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation()
     notification.type === "follow"
       ? router.push(`/profile/${notification.userId._id}`)
       : router.push(`/thread/${notification.threadId._id}`)
-  }
-  const handleAuthorClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    router.push(`/profile/${notification.userId._id}`)
   }
   return (
     <div
@@ -45,24 +40,29 @@ const NotificationCard = ({
       </div>
       <div className="flex w-full">
         <div className="w-8 flex-shrink-0 sm:w-10">
-          <Image
-            src={
-              notification.userId?.profilePhoto ||
-              "https://files.edgestore.dev/3zgmkhgty15vn9ga/publicFiles/_public/aa6eed17-f167-4f48-9eac-3883ec6bd6d1.png"
-            }
-            height={32}
-            width={32}
-            alt="profile-pic"
-            className="h-6 w-6 rounded-full sm:h-8 sm:w-8"
-            onClick={handleAuthorClick}
-          />
+          <Link
+            href={`/profile/${notification.userId._id}`}
+            onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={
+                notification.userId?.profilePhoto ||
+                "https://files.edgestore.dev/3zgmkhgty15vn9ga/publicFiles/_public/aa6eed17-f167-4f48-9eac-3883ec6bd6d1.png"
+              }
+              height={32}
+              width={32}
+              alt="profile-pic"
+              className="h-6 w-6 rounded-full sm:h-8 sm:w-8"
+            />
+          </Link>
         </div>
         <div className="flex flex-col">
           <div className="flex flex-wrap gap-x-1">
-            <p
-              onClick={handleAuthorClick}
-              className="font-bold hover:underline">
-              {notification.userId?.name}
+            <p className="font-bold hover:underline">
+              <Link
+                href={`/profile/${notification.userId._id}`}
+                onClick={(e) => e.stopPropagation()}>
+                {notification.userId?.name}
+              </Link>
             </p>
             <p>
               {notification.type === "like" && " liked your post"}
@@ -76,7 +76,7 @@ const NotificationCard = ({
           </div>
         </div>
       </div>
-      <div className="pl-2 text-sm text-muted-foreground shrink-0">
+      <div className="shrink-0 pl-2 text-sm text-muted-foreground">
         {calculateTimeDifference(notification?.created)}
       </div>
     </div>

@@ -15,7 +15,7 @@ const ThreadsTab = async ({
   return (
     <>
       {posts?.length === 0 ? (
-        <div className="px-4 pt-6 text-center">
+        <div className="px-4 py-36 text-center">
           <p className="text-xl font-bold">{`@${authorName} hasn’t posted anything`}</p>
           <p className="text-sm">
             When they do, those posts will show up here.

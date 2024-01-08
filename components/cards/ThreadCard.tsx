@@ -1,53 +1,20 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
 import { format } from "date-fns"
 import ReactionStrip from "@/components/shared/ReactionStrip"
 import ImageContainer from "@/components/shared/ImageContainer"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { toast } from "sonner"
-import { deleteThread } from "@/lib/actions/thread.actions"
+import CardMenu from "@/components/shared/CardMenu"
 import { Thread } from "@/types"
-import { MoreHorizontal } from "lucide-react"
 
-const ThreadCard = ({
-  post,
-  userId,
-  reposts,
-}: {
+interface ThreadCardProps {
   post: Thread
   userId: string
   reposts: string[]
-}) => {
-  const pathname = usePathname()
-  const router = useRouter()
-  const {
-    authorId,
-    children,
-    parentId,
-    text,
-    created,
-    _id,
-    postImages,
-    likes,
-  } = post
-  const handleDelete = async (e: any) => {
-    e.stopPropagation()
-    const promise = deleteThread(_id, pathname)
-    toast.promise(promise, {
-      loading: "Deleting Post...",
-      success: "Post deleted!",
-      error: "Failed to delete post",
-    })
-    router.push("/")
-  }
+}
+
+const ThreadCard = ({ post, userId, reposts }: ThreadCardProps) => {
+  const { authorId, children, text, created, _id, postImages, likes } = post
 
   return (
     <article className="flex border-y border-muted p-4">
@@ -80,32 +47,7 @@ const ThreadCard = ({
               </span>
             </Link>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="outline-none">
-              <MoreHorizontal className="h-6 w-6 rounded-full p-1 hover:bg-muted-foreground/20" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent forceMount align="end">
-              <Link
-                href={`/profile/${authorId?._id}`}
-                onClick={(e) => e.stopPropagation()}
-                scroll={false}
-                className="contents">
-                <DropdownMenuItem className="cursor-pointer">
-                  Profile
-                </DropdownMenuItem>
-              </Link>
-              {authorId?._id === userId && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleDelete}
-                    className="cursor-pointer">
-                    Delete
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <CardMenu authorId={authorId?._id} postId={_id} userId={userId} />
         </div>
         <pre className="whitespace-pre-wrap py-2 font-sans text-base leading-5">
           {text}

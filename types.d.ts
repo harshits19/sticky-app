@@ -9,24 +9,6 @@ type ProfileCardProps = {
   bio: string
   followers: string[]
 }
-
-type NotificationProps = {
-  _id: string
-  authorId: string
-  userId: {
-    _id: string
-    bio: string
-    name: string
-    profilePhoto: string
-    username: string
-  }
-  threadId: {
-    _id: string
-    text: string
-  }
-  type: string
-  created: Date
-}
 /* New Types */
 
 interface Thread {

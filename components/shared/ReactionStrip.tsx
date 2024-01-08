@@ -16,7 +16,7 @@ import {
   ShareIcon,
 } from "@/components/shared/Icons"
 
-interface Props {
+interface ReactionStripeProps {
   threadId: string
   userId: string
   likes: string[]
@@ -30,46 +30,48 @@ const ReactionStrip = ({
   likes,
   replies,
   reposts,
-}: Props) => {
+}: ReactionStripeProps) => {
   const pathname = usePathname()
   const isLiked = likes?.find((like) => userId === like) ? true : false
-  const isReposted = reposts?.find((thread) => thread === threadId) ? true : false
+  const isReposted = reposts?.find((thread) => thread === threadId)
+    ? true
+    : false
   const [optimisticLike, setOptimisticLike] = useOptimistic(isLiked)
   const [optimisticRepost, setOptimisticRepost] = useOptimistic(isReposted)
   const handleReaction = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (optimisticLike) {
+      setOptimisticLike(false)
       await dislikePost({
         userId,
         threadId,
         path: pathname,
       })
-      setOptimisticLike(false)
     } else {
+      setOptimisticLike(true)
       await likePost({
         userId,
         threadId,
         path: pathname,
       })
-      setOptimisticLike(true)
     }
   }
   const handleRepost = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (optimisticRepost) {
+      setOptimisticRepost(false)
       await unrepost({
         userId,
         threadId,
         path: pathname,
       })
-      setOptimisticRepost(false)
     } else {
+      setOptimisticRepost(true)
       await repost({
         userId,
         threadId,
         path: pathname,
       })
-      setOptimisticRepost(true)
     }
   }
   return (
