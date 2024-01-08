@@ -12,24 +12,26 @@ const MidSection = ({
   status: boolean
 }) => {
   return (
-    <>
+    <div className="p-4">
       {userId === authorId && (
         <Button className="mt-2 w-full" size="sm" variant="outline" asChild>
           <Link href={`/profile/edit`}>Edit Profile</Link>
         </Button>
       )}
       {userId !== authorId && (
-        <div className="flex gap-x-2 items-center mt-2">
+        <div className="mt-2 flex items-center gap-x-2">
           <FollowButton
             authorId={authorId}
             userId={userId}
             status={status}
             className={"w-full"}
           />
-          <Button variant="outline" size="sm" className="w-full">Mention</Button>
+          <Button variant="outline" size="sm" className="w-full">
+            Mention
+          </Button>
         </div>
       )}
-    </>
+    </div>
   )
 }
 export default MidSection

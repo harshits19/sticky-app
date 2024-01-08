@@ -52,7 +52,7 @@ export const getPostsByAuthorId = async (authorId: string) => {
   try {
     connectToDB()
     //select those posts(that belongs to author) that have no parent
-    const posts = await Thread.find({
+    const response = await Thread.find({
       authorId,
       parentId: { $in: [null, undefined] },
     })
@@ -68,8 +68,18 @@ export const getPostsByAuthorId = async (authorId: string) => {
         select: "_id",
       })
 
+    const posts = JSON.parse(JSON.stringify(response))
+    return { posts }
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+export const getRepliesByAuthorId = async (authorId: string) => {
+  try {
+    connectToDB()
     //select reply(belongs to author) and its parent-post(can be of diffrent author)
-    const replies = await Thread.find({
+    const response = await Thread.find({
       authorId,
       parentId: { $exists: true, $ne: null },
     })
@@ -93,8 +103,19 @@ export const getPostsByAuthorId = async (authorId: string) => {
         model: Thread,
       })
 
-    //Finding reposts of specific User(in this case - post author)
-    const reposts = await User.findById(authorId)
+    const replies = JSON.parse(JSON.stringify(response))
+
+    return { replies }
+  } catch (error: any) {
+    throw new Error(`${error}`)
+  }
+}
+
+export const getRepostsByAuthorId = async (authorId: string) => {
+  try {
+    connectToDB()
+    //select reply(belongs to author) and its parent-post(can be of diffrent author)
+    const response = await User.findById(authorId)
       .select("reposts")
       .populate({
         path: "reposts",
@@ -105,12 +126,10 @@ export const getPostsByAuthorId = async (authorId: string) => {
           select: "_id name username profilePhoto",
         },
       })
-    const response = {
-      posts: JSON.parse(JSON.stringify(posts)),
-      replies: JSON.parse(JSON.stringify(replies)),
-      reposts: JSON.parse(JSON.stringify(reposts)),
-    }
-    return response
+
+    const reposts = JSON.parse(JSON.stringify(response))
+
+    return { reposts }
   } catch (error: any) {
     throw new Error(`${error}`)
   }

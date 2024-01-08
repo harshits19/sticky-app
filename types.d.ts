@@ -1,75 +1,5 @@
-import mongoose from "mongoose"
-
-interface PostCardProps {
-  text: string
-  _id: string
-  created: Date | string
-  postImages: string[]
-  authorId: {
-    name: string
-    username: string
-    _id: string
-    profilePhoto: string
-  }
-  userId: string
-  likes: string[]
-  reposts: string[]
-  replies: number
-  parentId?: string | null
-  comment?: boolean
-}
-
-type Post = {
-  _id: string
-  authorId: {
-    name: string
-    username: string
-    _id: string
-    profilePhoto: string
-  }
-  text: string
-  postImages: string[]
-  parentId: string
-  children: string[]
-  created: Date
-  likes: string[]
-}
-
-type NewPost = {
-  key?: string
-  _id: mongoose.Schema.Types.ObjectId
-  authorId: {
-    _id: mongoose.Schema.Types.ObjectId
-    name: string
-    username: string
-    profilePhoto: string
-  }
-  text: string
-  postImages: string[]
-  parentId: string | null
-  children: {
-    _id: mongoose.Schema.Types.ObjectId
-  }[]
-  created: Date
-  likes: string[]
-}
-
-type User = {
-  _id: string
-  bio: string
-  created: Date
-  followers: string
-  followings: string[]
-  link: string
-  name: string
-  onboarded: boolean
-  profilePhoto: string
-  reposts: string[]
-  userLabel: string
-  userPosts: string[]
-  username: string
-  visibility: string
-}
+import mongoose, { Document } from "mongoose"
+import { TypeUser } from "./lib/models/user.model"
 
 type ProfileCardProps = {
   _id: string
@@ -97,3 +27,45 @@ type NotificationProps = {
   type: string
   created: Date
 }
+/* New Types */
+
+interface Thread {
+  text: string
+  children: string[] | TypeThread
+  likes: string[]
+  authorId: string | TypeUser
+  postImages: string[]
+  created: Date
+  parentId?: string | null | undefined | TypeThread
+}
+
+interface User {
+  id: string
+  name: string
+  username: string
+  profilePhoto?: string | null | undefined
+  bio?: string | null | undefined
+  link?: string | null | undefined
+  userLabel?: string | null | undefined
+  visibility: string
+  onboarded: boolean
+  created: Date
+  userPosts: string[] | TypeThread[]
+  reposts: string[] | TypeThread[]
+  followings: string[] | TypeUser[]
+  followers: string[] | TypeUser[]
+  notifications: string[] | TypeNotification[]
+  hasNotification?: boolean | null | undefined
+}
+
+interface Notification {
+  authorId: string | TypeUser
+  type: string
+  created: Date
+  userId?: string | null | undefined | TypeUser
+  threadId?: string | null | undefined | TypeThread
+}
+
+export interface Thread extends Document {}
+export interface User extends Document {}
+export interface Notification extends Document {}

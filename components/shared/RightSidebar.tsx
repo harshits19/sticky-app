@@ -1,10 +1,14 @@
 import Link from "next/link"
 import ProfileCard from "@/components/cards/ProfileCard"
-import { getAllUsers } from "@/lib/actions/user.actions"
+import { getAllUsers, getUser } from "@/lib/actions/user.actions"
 import { ProfileCardProps } from "@/types"
+import { currentUser } from "@clerk/nextjs"
 
-const RightSidebar = async ({ userId }: { userId: string }) => {
-  const { users } = await getAllUsers(userId, "", 1, 5)
+const RightSidebar = async () => {
+  const user = await currentUser()
+  if (!user) return
+  const userInfo = await getUser()
+  const { users } = await getAllUsers(userInfo?._id, "", 1, 5)
   return (
     <main className="sticky top-0 hidden h-screen w-full max-w-xs border-l border-muted p-4 lg:flex">
       {!!users.length && (
@@ -13,8 +17,8 @@ const RightSidebar = async ({ userId }: { userId: string }) => {
           {users?.map((user: ProfileCardProps) => (
             <ProfileCard
               data={user}
-              key={user._id}
-              userId={userId}
+              key={user?._id}
+              userId={userInfo?._id}
               className="hover:bg-muted-foreground/10"
               asChild
             />

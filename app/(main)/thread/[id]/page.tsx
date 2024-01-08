@@ -7,7 +7,7 @@ import ThreadCard from "@/components/cards/ThreadCard"
 import CreateCommentForm from "@/components/forms/CreateCommentForm"
 import { getThreadById } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
-import { Post } from "@/types"
+import { Thread } from "@/types"
 
 export async function generateMetadata({
   params: { id },
@@ -34,13 +34,7 @@ const ThreadPage = async ({
       <Navbar navTitle="Post" />
       <ThreadCard
         key={post?.authorId}
-        text={post?.text}
-        _id={id}
-        created={post?.created}
-        postImages={post?.postImages}
-        authorId={post?.authorId}
-        likes={post?.likes}
-        replies={post?.children?.length}
+        post={post}
         userId={userInfo?._id}
         reposts={userInfo?.reposts}
       />
@@ -59,20 +53,13 @@ const ThreadPage = async ({
         <CreateCommentForm parentId={post?._id} userId={userInfo?._id} />
       </div>
       {post?.children &&
-        post?.children?.map((thread: Post) => {
+        post?.children?.map((thread: Thread) => {
           return (
             <PostCard
               key={thread._id}
-              text={thread.text}
-              _id={thread._id}
-              created={thread.created}
-              postImages={thread?.postImages}
-              authorId={thread?.authorId}
-              likes={thread?.likes}
-              replies={thread?.children?.length}
+              post={thread}
               userId={userInfo?._id}
               reposts={userInfo?.reposts}
-              comment
             />
           )
         })}

@@ -1,35 +1,15 @@
-"use client"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname, useRouter } from "next/navigation"
-import { SignOutButton } from "@clerk/nextjs"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { markReadNotification } from "@/lib/actions/notification.actions"
-import { HomeIcon, SearchIcon, CreateIcon, HeartIcon, UserIcon } from "./Icons"
-import { Circle, MoreHorizontal } from "lucide-react"
+import { currentUser } from "@clerk/nextjs"
+import { getUser, getUserNotification } from "@/lib/actions/user.actions"
+import LeftSidebarItems from "@/components/shared//LeftSidebarItems"
+import LeftSidebarProfileBtn from "@/components/shared//LeftSidebarProfileBtn"
 
-interface SidebarProps {
-  userId: string
-  username: string
-  name: string
-  imageURL: string
-  notificationStatus: boolean
-}
-const LeftSidebar = ({
-  userId,
-  username,
-  name,
-  imageURL,
-  notificationStatus,
-}: SidebarProps) => {
-  const pathname = usePathname()
-  const router = useRouter()
+const LeftSidebar = async () => {
+  const user = await currentUser()
+  if (!user) return
+  const userInfo = await getUser()
+  const notificationStatus = await getUserNotification(userInfo._id)
   return (
     <section className="sticky top-0 hidden h-screen flex-col justify-between border-r-[1px] border-muted bg-background px-1 pb-8 pt-2 sm:flex lg:w-full lg:max-w-xs lg:flex-1 lg:pl-4">
       <div className="flex flex-col items-center lg:items-start">
@@ -39,122 +19,18 @@ const LeftSidebar = ({
             <p className="hidden text-lg font-semibold lg:block">Sticky</p>
           </Link>
         </div>
-        <Link href="/" className="contents">
-          <div className="flex w-max items-center gap-x-4  rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <HomeIcon
-              className={`${
-                pathname === "/" ? "fill-current" : "fill-transparent"
-              }`}
-            />
-            <span
-              className={`hidden text-lg text-primary lg:flex ${
-                pathname === "/" && "font-bold"
-              }`}>
-              Home
-            </span>
-          </div>
-        </Link>
-        <Link href="/search" className="contents">
-          <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <SearchIcon />
-            <span
-              className={`hidden text-lg text-primary lg:flex ${
-                pathname === "/search" && "font-bold"
-              }`}>
-              Search
-            </span>
-          </div>
-        </Link>
-        <Link href="/create-post" className="contents">
-          <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <CreateIcon />
-            <span
-              className={`hidden text-lg text-primary lg:flex ${
-                pathname === "/create-post" && "font-bold"
-              }`}>
-              Create Post
-            </span>
-          </div>
-        </Link>
-        <Link href="/notifications" className="contents">
-          <div
-            className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6"
-            onClick={() => {
-              if (notificationStatus === true) markReadNotification(userId)
-            }}>
-            <div className="relative">
-              <HeartIcon
-                className={`${
-                  pathname === "/notifications"
-                    ? "fill-current"
-                    : "fill-transparent"
-                }`}
-              />
-              {notificationStatus === true && (
-                <span className="absolute -right-2 -top-2">
-                  <Circle className="h-2 w-2 fill-blue-500 stroke-blue-500" />
-                </span>
-              )}
-            </div>
-            <span
-              className={`hidden text-lg text-primary lg:flex ${
-                pathname === "/notifications" && "font-bold"
-              }`}>
-              Notifications
-            </span>
-          </div>
-        </Link>
-        <Link href={`/profile/${userId}`} className="contents">
-          <div className="flex w-max items-center gap-x-4 rounded-full px-4 py-3 hover:bg-muted lg:px-6">
-            <UserIcon
-              className={`${
-                pathname === `/profile/${userId}`
-                  ? "fill-current"
-                  : "fill-transparent"
-              }`}
-            />
-            <span
-              className={`hidden text-lg text-primary lg:flex ${
-                pathname === `/profile/${userId}` && "font-bold"
-              }`}>
-              Profile
-            </span>
-          </div>
-        </Link>
+        <LeftSidebarItems
+          notificationStatus={notificationStatus?.hasNotification}
+          userId={userInfo._id}
+          variant="desktop"
+        />
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div
-            role="button"
-            className="flex w-full max-w-[264px] items-center justify-center rounded-full px-3 py-3 hover:bg-muted lg:px-6">
-            <div className="h-10 w-12 lg:w-16">
-              <Image
-                src={imageURL}
-                height={40}
-                width={40}
-                alt="profile-image"
-                className="h-10 w-10 rounded-full"
-              />
-            </div>
-            <div className="hidden w-full flex-col lg:flex">
-              <span className="text-sm font-semibold">{name}</span>
-              <span className="text-sm text-muted-foreground">
-                {"@" + username}
-              </span>
-            </div>
-            <MoreHorizontal className="hidden h-5 w-5 lg:flex" />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent forceMount align="center">
-          <Link href={`/profile/${userId}`}>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-          </Link>
-          <DropdownMenuSeparator />
-          <SignOutButton signOutCallback={() => router.push("/sign-in")}>
-            <DropdownMenuItem className="w-full">Logout</DropdownMenuItem>
-          </SignOutButton>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <LeftSidebarProfileBtn
+        userId={userInfo?._id}
+        username={userInfo?.username}
+        name={userInfo?.name}
+        imageURL={userInfo?.profilePhoto}
+      />
     </section>
   )
 }

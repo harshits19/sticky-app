@@ -14,22 +14,30 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
 import { deleteThread } from "@/lib/actions/thread.actions"
-import { PostCardProps } from "@/types"
+import { Thread } from "@/types"
 import { MoreHorizontal } from "lucide-react"
 
 const ThreadCard = ({
-  text,
-  _id,
-  created,
-  postImages,
-  authorId,
-  likes,
-  replies,
+  post,
   userId,
   reposts,
-}: PostCardProps) => {
+}: {
+  post: Thread
+  userId: string
+  reposts: string[]
+}) => {
   const pathname = usePathname()
   const router = useRouter()
+  const {
+    authorId,
+    children,
+    parentId,
+    text,
+    created,
+    _id,
+    postImages,
+    likes,
+  } = post
   const handleDelete = async (e: any) => {
     e.stopPropagation()
     const promise = deleteThread(_id, pathname)
@@ -111,7 +119,7 @@ const ThreadCard = ({
           threadId={_id}
           userId={userId}
           likes={likes}
-          replies={replies}
+          replies={children.length}
           reposts={reposts}
         />
       </div>

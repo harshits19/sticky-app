@@ -15,23 +15,30 @@ import {
 import { toast } from "sonner"
 import { calculateTimeDifference } from "@/hooks/useDateDistance"
 import { deleteThread } from "@/lib/actions/thread.actions"
-import { PostCardProps } from "@/types"
+import { Thread } from "@/types"
 import { MoreHorizontal } from "lucide-react"
 
 const PostCard = ({
-  text,
-  _id,
-  created,
-  postImages,
-  authorId,
-  likes,
-  replies,
+  post,
   userId,
-  comment,
   reposts,
-}: PostCardProps) => {
+}: {
+  post: Thread
+  userId: string
+  reposts: string[]
+}) => {
   const router = useRouter()
   const pathname = usePathname()
+  const {
+    authorId,
+    children,
+    parentId,
+    text,
+    created,
+    _id,
+    postImages,
+    likes,
+  } = post
   const handleDelete = async (e: any) => {
     e.stopPropagation()
     const promise = deleteThread(_id, pathname)
@@ -120,7 +127,7 @@ const PostCard = ({
           threadId={_id}
           userId={userId}
           likes={likes}
-          replies={replies}
+          replies={children.length}
           reposts={reposts}
         />
       </div>
