@@ -1,4 +1,3 @@
-import { memo } from "react"
 import NavbarTitle from "@/components/shared/NavbarTitle"
 import NavbarMenu from "@/components/shared/NavbarMenu"
 import { getUser } from "@/lib/actions/user.actions"
@@ -15,4 +14,4 @@ const Navbar = async () => {
     </nav>
   )
 }
-export default memo(Navbar)
+export default Navbar

@@ -1,5 +1,5 @@
 "use client"
-import { ChangeEventHandler, useEffect, useRef, useState, memo } from "react"
+import { ChangeEventHandler, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -87,9 +87,6 @@ const CreatePostForm = ({ userId }: { userId: string }) => {
     setIsSubmitting(false)
     router.push("/")
   }
-  useEffect(() => {
-    textAreaRef.current?.focus()
-  }, [])
   const onEmojiSelect = (data: EmojiClickData) => {
     setValue((input) => {
       const arr = input.split("")
@@ -163,4 +160,4 @@ const CreatePostForm = ({ userId }: { userId: string }) => {
     </div>
   )
 }
-export default memo(CreatePostForm)
+export default CreatePostForm

@@ -1,4 +1,3 @@
-import { memo } from "react"
 import Link from "next/link"
 import ProfileCard from "@/components/cards/ProfileCard"
 import { getAllUsers, getUser } from "@/lib/actions/user.actions"
@@ -34,4 +33,4 @@ const RightSidebar = async () => {
     </main>
   )
 }
-export default memo(RightSidebar)
+export default RightSidebar
