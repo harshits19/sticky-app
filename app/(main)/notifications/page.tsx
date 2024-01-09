@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import Navbar from "@/components/shared/Navbar"
 import NotificationCard from "@/components/cards/NotificationCard"
 import { getAllNotifications } from "@/lib/actions/notification.actions"
 import { Notification } from "@/types"
@@ -12,7 +11,6 @@ const NotificationPage = async () => {
   const notifications = await getAllNotifications()
   return (
     <>
-      <Navbar navTitle="Notifications" />
       <div className="flex flex-col">
         {notifications?.length === 0 ? (
           <div className="px-4 pt-6 text-center">

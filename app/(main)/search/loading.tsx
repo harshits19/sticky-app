@@ -1,7 +1,6 @@
 const loading = () => {
   return (
     <>
-      <div className="h-12 w-full bg-muted"></div>
       <div className="flex h-14 w-full gap-x-1 p-2">
         <div className="w-full border border-muted-foreground/10"></div>
         <div className="w-12 rounded-md bg-muted"></div>

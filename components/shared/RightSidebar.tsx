@@ -1,8 +1,9 @@
+import { memo } from "react"
 import Link from "next/link"
 import ProfileCard from "@/components/cards/ProfileCard"
 import { getAllUsers, getUser } from "@/lib/actions/user.actions"
-import { ProfileCardProps } from "@/types"
 import { currentUser } from "@clerk/nextjs"
+import { ProfileCardProps } from "@/types"
 
 const RightSidebar = async () => {
   const user = await currentUser()
@@ -33,4 +34,4 @@ const RightSidebar = async () => {
     </main>
   )
 }
-export default RightSidebar
+export default memo(RightSidebar)

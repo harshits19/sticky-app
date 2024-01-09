@@ -1,7 +1,11 @@
 "use client"
+import { useOptimistic } from "react"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { followPostAuthor, unfollowPostAuthor } from "@/lib/actions/user.actions"
+import {
+  followPostAuthor,
+  unfollowPostAuthor,
+} from "@/lib/actions/user.actions"
 import { cn } from "@/lib/utils"
 
 const FollowButton = ({
@@ -16,17 +20,23 @@ const FollowButton = ({
   className?: string
 }) => {
   const pathname = usePathname()
+  const [followStatus, setFollowStatus] = useOptimistic(status)
   const handleAction = async () => {
-    if (status) unfollowPostAuthor(authorId, userId, pathname)
-    else followPostAuthor(authorId, userId, pathname)
+    if (followStatus) {
+      setFollowStatus(false)
+      unfollowPostAuthor(authorId, userId, pathname)
+    } else {
+      setFollowStatus(true)
+      followPostAuthor(authorId, userId, pathname)
+    }
   }
   return (
     <Button
       className={cn(className)}
       size="sm"
       onClick={handleAction}
-      variant={status ? "outline" : "default"}>
-      {status ? "Unfollow" : "Follow"}
+      variant={followStatus ? "outline" : "default"}>
+      {followStatus ? "Unfollow" : "Follow"}
     </Button>
   )
 }

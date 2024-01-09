@@ -38,11 +38,12 @@ const ImageContainer = ({
             <Image
               src={imgUrl}
               alt="post-image"
-              className={"h-full max-h-96 w-full rounded-xl object-cover"}
-              sizes="100vw"
-              quality={100}
-              width={200}
-              height={100}
+              className={
+                "h-full max-h-96 w-full rounded-xl object-cover object-center"
+              }
+              sizes="(max-width:768px) 60vw,(max-width:1024px) 50vw, 30vw"
+              width={500}
+              height={400}
             />
           </div>
         ))}

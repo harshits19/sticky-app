@@ -6,7 +6,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Theme, Categories, EmojiStyle } from "emoji-picker-react"
+import {
+  Theme,
+  Categories,
+  EmojiStyle,
+  EmojiClickData,
+} from "emoji-picker-react"
+import { SetStateAction } from "react"
 
 const EmojiPicker = dynamic(
   () => {
@@ -16,7 +22,7 @@ const EmojiPicker = dynamic(
 )
 
 type IconPickerProps = {
-  onChange: (icon: string) => void
+  onChange: (data: EmojiClickData, e: MouseEvent) => void
   children: React.ReactNode
   asChild?: boolean
 }
@@ -63,7 +69,7 @@ const IconPicker = ({ onChange, children, asChild }: IconPickerProps) => {
           height={350}
           theme={theme}
           emojiStyle={EmojiStyle.GOOGLE}
-          onEmojiClick={(data) => onChange(data.emoji)}
+          onEmojiClick={(data, e) => onChange(data, e)}
           searchDisabled
           skinTonesDisabled
           categories={categories}

@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation"
 import PostCard from "@/components/cards/PostCard"
-import Navbar from "@/components/shared/Navbar"
 import CreatePost from "@/app/(main)/create-post/page"
 import { getAllPosts } from "@/lib/actions/thread.actions"
 import { getUser } from "@/lib/actions/user.actions"
@@ -13,7 +12,6 @@ const HomePage = async () => {
   if (!userInfo?.onboarded) redirect("/onboarding")
   return (
     <>
-      <Navbar authorId={userInfo._id} navTitle="Home" />
       <CreatePost />
       {
         <div>

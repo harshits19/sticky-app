@@ -1,7 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
-import Navbar from "@/components/shared/Navbar"
 import PostCard from "@/components/cards/PostCard"
 import ThreadCard from "@/components/cards/ThreadCard"
 import CreateCommentForm from "@/components/forms/CreateCommentForm"
@@ -31,7 +30,6 @@ const ThreadPage = async ({
   const userInfo = await getUser()
   return (
     <>
-      <Navbar navTitle="Post" />
       <ThreadCard
         key={post?.authorId}
         post={post}

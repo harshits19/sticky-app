@@ -1,7 +1,6 @@
 import { Metadata } from "next"
 import ProfileCard from "@/components/cards/ProfileCard"
 import SearchUsersForm from "@/components/forms/SearchUsersForm"
-import Navbar from "@/components/shared/Navbar"
 import { getAllUsers, getUser } from "@/lib/actions/user.actions"
 import { ProfileCardProps } from "@/types"
 
@@ -18,7 +17,6 @@ const SearchPage = async ({
   const { users } = await getAllUsers(userInfo._id, searchParams.q)
   return (
     <>
-      <Navbar navTitle="Search" />
       <SearchUsersForm />
       <section className="pb-4 pt-2">
         {users?.length === 0 ? (

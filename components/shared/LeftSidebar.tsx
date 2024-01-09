@@ -1,3 +1,4 @@
+import { memo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { currentUser } from "@clerk/nextjs"
@@ -44,4 +45,4 @@ const LeftSidebar = async () => {
     </>
   )
 }
-export default LeftSidebar
+export default memo(LeftSidebar)

@@ -1,13 +1,18 @@
 "use client"
-import { ChangeEventHandler, useState } from "react"
+import { ChangeEventHandler, memo, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import IconPicker from "@/components/modals/IconPicker"
 import { Textarea } from "@/components/ui/textarea"
 import ImageContainer from "@/components/shared/ImageContainer"
+import ProgressCircle from "@/components/shared/ProgressCircle"
+import { EmojiClickData } from "emoji-picker-react"
+import useAutosizeTextArea from "@/hooks/useResizeTextarea"
 import { createComment } from "@/lib/actions/thread.actions"
 import { useEdgeStore } from "@/lib/edgestore"
 import { ImageIcon, Smile } from "lucide-react"
+
+const MAX_CHAR = 280
 
 const CreateCommentForm = ({
   parentId,
@@ -20,7 +25,33 @@ const CreateCommentForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [store, setStore] = useState<string[]>([])
   const { edgestore } = useEdgeStore()
-
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  useAutosizeTextArea(textAreaRef.current, value)
+  const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = evt.target?.value
+    setValue(val)
+  }
+  useEffect(() => {
+    textAreaRef.current?.focus()
+  }, [])
+  const onEmojiSelect = (data: EmojiClickData) => {
+    setValue((input) => {
+      const arr = input.split("")
+      const currentPos: number =
+        textAreaRef.current?.selectionStart ?? arr.length
+      arr.splice(currentPos, 0, data.emoji)
+      const str = arr.join("")
+      if (textAreaRef.current) {
+        setTimeout(() => {
+          textAreaRef.current?.setSelectionRange(
+            currentPos + data.emoji.length,
+            currentPos + data.emoji.length,
+          )
+        }, 0)
+      }
+      return str
+    })
+  }
   const removeImg = async (url: string) => {
     try {
       const promise = edgestore.publicFiles.delete({
@@ -79,17 +110,18 @@ const CreateCommentForm = ({
     setStore([])
     setIsSubmitting(false)
   }
-  const onEmojiSelect = (emoji: string) => {
-    setValue((prevVal) => prevVal + emoji)
-  }
+  let progress = (value?.length / 280) * 100
   return (
     <div className="w-full">
       <form className="w-full" onSubmit={(e) => onSubmit(e)}>
         <Textarea
           placeholder="post your reply.."
-          className="no-focus h-24 resize-none border-none text-base"
+          className="no-focus resize-y border-none text-base"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handleChange}
+          ref={textAreaRef}
+          rows={2}
+          maxLength={MAX_CHAR}
         />
         <ImageContainer images={store} removeImg={removeImg} isForm />
         <div className="flex items-center justify-between border-t border-muted px-4 py-2">
@@ -115,16 +147,22 @@ const CreateCommentForm = ({
               </div>
             </IconPicker>
           </div>
-          <Button
-            type="submit"
-            className="rounded-full"
-            size="sm"
-            disabled={isSubmitting}>
-            Reply
-          </Button>
+          <div className="flex items-center gap-x-4">
+            {!!value.length ? <ProgressCircle progress={progress} /> : null}
+            {!!value.length ? (
+              <div className="h-7 w-px bg-muted-foreground/40"></div>
+            ) : null}
+            <Button
+              type="submit"
+              className="rounded-full"
+              size="sm"
+              disabled={isSubmitting}>
+              Reply
+            </Button>
+          </div>
         </div>
       </form>
     </div>
   )
 }
-export default CreateCommentForm
+export default memo(CreateCommentForm)

@@ -1,5 +1,4 @@
 import ProfileEditForm from "@/components/forms/ProfileEditForm"
-import Navbar from "@/components/shared/Navbar"
 import { getUser } from "@/lib/actions/user.actions"
 import { currentUser } from "@clerk/nextjs"
 import type { Metadata } from "next"
@@ -30,13 +29,8 @@ const EditPage = async () => {
   }
   return (
     <>
-      <Navbar
-        authorId={userInfo._id}
-        authorName={userInfo?.name}
-        username={userInfo?.username}
-      />
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+        <h2 className="mb-4 text-xl font-bold">Edit Profile</h2>
         <div className="flex justify-center">
           <ProfileEditForm user={userData} btnTitle="Update" editForm />
         </div>
